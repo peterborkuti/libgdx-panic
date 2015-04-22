@@ -12,6 +12,8 @@ public class BrickScreen implements Screen {
 
 	OrthographicCamera camera;
 
+	public static final int NUM_OF_FLOORS = 5;
+
 	public BrickScreen(final BrickGame bGame) {
 		game = bGame;
 		camera = new OrthographicCamera();
@@ -33,10 +35,7 @@ public class BrickScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.disableBlending();
         game.batch.begin();
-        Vector2 v = getRandomPlace(game.brick);
-        game.batch.draw(game.brick, v.x, v.y);
-        v = getRandomPlace(game.ladder);
-        game.batch.draw(game.ladder, v.x, v.y);
+        createField();
         game.batch.end();
 
         /*
@@ -81,7 +80,6 @@ public class BrickScreen implements Screen {
 	@Override
 	public void dispose() {
 		game.dispose();
-
 	}
 
 	private static Vector2 getRandomPlace(Texture image) {
@@ -95,6 +93,37 @@ public class BrickScreen implements Screen {
 		
 		return new Vector2((float)x, (float)y);
 
+		
+	}
+
+	private void createFloors() {
+		int floorHeight = Gdx.graphics.getHeight() / NUM_OF_FLOORS;
+
+		int places = Gdx.graphics.getWidth() / game.ladder.getWidth();
+
+		for (int floor = 0; floor < NUM_OF_FLOORS; floor++) {
+			double x = Math.floor(Math.random() * places)
+					* game.ladder.getWidth();
+			for (int y = floor * floorHeight; y < (floor + 1) * floorHeight; y += game.ladder
+					.getHeight()) {
+				game.batch.draw(game.ladder, (float) x, (float) y);
+			}
+		}
+	}
+
+	private void createLadders() {
+		int floorHeight = Gdx.graphics.getHeight() / NUM_OF_FLOORS;
+
+		for (int floor = 0; floor < NUM_OF_FLOORS; floor++ ) {
+			for (int x = 0; x < Gdx.graphics.getWidth(); x += game.brick.getWidth()) {
+				game.batch.draw(game.brick, x, floor * floorHeight);
+			}
+		}
+	}
+
+	private void createField() {
+		createFloors();
+		createLadders();
 		
 	}
 
