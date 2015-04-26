@@ -8,4 +8,5 @@ public class Const {
 	public static final int WORLD_WIDTH = 20; // measured in tiles
 	
 	public static final int FLOOR_HEIGHT = 4; // measure in tiles, height of one
+	public static final int ENEMY_NUM = 5; // Number of enemies
 }

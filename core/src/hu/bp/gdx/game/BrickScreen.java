@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 
 public class BrickScreen implements Screen {
@@ -13,7 +14,7 @@ public class BrickScreen implements Screen {
 
 	private Nerd nerd;
 	private Bomb bomb;
-	private Enemy enemy;
+	private Enemy enemy[] = new Enemy[Const.ENEMY_NUM];
 
 	private TiledForeGround foreground;
 
@@ -48,8 +49,10 @@ public class BrickScreen implements Screen {
 		Gdx.input.setInputProcessor(iProcessor);
 
 		bomb = new Bomb(game);
-		enemy = new Enemy(game);
-		enemy.reset(100, Const.FLOOR_HEIGHT * Const.TILE_SIZE + Const.TILE_SIZE);
+		for (int i = 0; i < Const.ENEMY_NUM; i++) {
+			enemy[i] = new Enemy(game);
+			enemy[i].reset(MathUtils.random(0,100), MathUtils.random(1, 5) * Const.FLOOR_HEIGHT * Const.TILE_SIZE + Const.TILE_SIZE);
+		}
 	}
 
 	@Override
@@ -97,7 +100,9 @@ public class BrickScreen implements Screen {
 
 		nerd.move(Gdx.graphics.getDeltaTime());
 
-		enemy.move(Gdx.graphics.getDeltaTime());
+		for (int i = 0; i < Const.ENEMY_NUM; i++) {
+			enemy[i].move(Gdx.graphics.getDeltaTime());
+		}
 
 		if (bomb.isActive()) {
 			bomb.move(Gdx.graphics.getDeltaTime());
@@ -110,9 +115,11 @@ public class BrickScreen implements Screen {
 			nerd.getFrame(), nerd.getX(), nerd.getY(), nerd.getWidth(),
 			nerd.getHeight());
 
-		batch.draw(
-				enemy.getFrame(), enemy.getX(), enemy.getY(), enemy.getWidth(),
-				enemy.getHeight());
+		for (int i = 0; i < Const.ENEMY_NUM; i++) {
+			batch.draw(
+				enemy[i].getFrame(), enemy[i].getX(), enemy[i].getY(), enemy[i].getWidth(),
+				enemy[i].getHeight());
+		}
 
 		batch.end();
 	}
