@@ -51,7 +51,7 @@ public class BrickScreen implements Screen {
 		bomb = new Bomb(game);
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
 			enemy[i] = new Enemy(game);
-			enemy[i].reset(MathUtils.random(0,100), MathUtils.random(1, 5) * Const.FLOOR_HEIGHT * Const.TILE_SIZE + Const.TILE_SIZE);
+			enemy[i].reset(i);
 		}
 	}
 

@@ -7,6 +7,7 @@ import hu.bp.gdx.game.Movable.STATE;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 
 /**
  * @author peter
@@ -15,6 +16,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Enemy implements Movable {
 
 	private STATE state = STATE.RIGHT;
+	private static final int LEFT_MARGIN = 3; // empty margin in pixels
+	private static final int RIGHT_MARGIN = 2; // empty margin in pixels
 	
 	private float x = 0;
 	private float y = Const.TILE_SIZE + Const.FLOOR_HEIGHT;
@@ -41,11 +44,28 @@ public class Enemy implements Movable {
 		animation = new Animation(animSpeed, frames);
 	}
 
-	public void reset(float _x, float _y) {
-		x = _x;
-		y = _y;
+	public void reset(int floor) {
+		x = MathUtils.random(0, Const.WORLD_WIDTH_UNIT - Const.TILE_SIZE * aspectRatio);
+
+		y = floor * Const.FLOOR_HEIGHT * Const.TILE_SIZE + Const.TILE_SIZE;
+
 		stateTime = 0;
 		active = true;
+
+		if (x < Const.WORLD_WIDTH_UNIT / 2) {
+			state = STATE.RIGHT;
+		} else {
+			state = STATE.LEFT;
+		}
+	}
+
+	public void reset (int floor1, int floor2) {
+		int floor = MathUtils.random(floor1, floor2);
+		reset(floor);
+	}
+
+	public void reset() {
+		reset(1, Const.NUM_OF_FLOORS - 1);
 	}
 
 	public float getWidth() {
@@ -54,6 +74,10 @@ public class Enemy implements Movable {
 
 	public float getHeight() {
 		return currentFrame.getRegionHeight() * aspectRatio;
+	}
+
+	public void die() {
+		active = false;
 	}
 
 	public boolean isActive() {
@@ -84,23 +108,22 @@ public class Enemy implements Movable {
 		y = _y;
 	}
 
-	public boolean getLoop() {
-		return false;
-	}
-
 	public void move(float deltaTime) {
 		stateTime += deltaTime;
+
 		float delta = deltaTime / animSpeed * animVelocity;
 
 		if (state == STATE.LEFT) {
 			x -= delta;
-			if (x < animVelocity) {
+			if (x < - LEFT_MARGIN * aspectRatio) {
+				x = - LEFT_MARGIN * aspectRatio;
 				state = STATE.RIGHT;
 			}
 		}
 		else if (state == STATE.RIGHT) {
 			x += delta;
-			if (x > (Const.WORLD_WIDTH - 1) * Const.TILE_SIZE) {
+			if (x > Const.WORLD_WIDTH_UNIT - (Const.TILE_SIZE - RIGHT_MARGIN)* aspectRatio) {
+				x = Const.WORLD_WIDTH_UNIT - (Const.TILE_SIZE - RIGHT_MARGIN) * aspectRatio;
 				state = STATE.LEFT;
 			}
 		}
