@@ -24,10 +24,10 @@ public class Nerd implements Movable {
 
 	private TextureRegion currentFrame;
 
-	public static final float nerdAspectRatio = 2f; //sprite was too small
+	public static final float aspectRatio = 2f; //sprite was too small
 
 	public static final float animSpeed = 0.05f; // second / frame
-	public static final float animVelocity = 2.0f * nerdAspectRatio; // pixel moving / frame
+	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
 
 	public Nerd(BrickGame game) {
 		TextureRegion[][] tmp = TextureRegion.split(game.nerdSheet,
@@ -37,14 +37,14 @@ public class Nerd implements Movable {
 			walkFrames[i] = tmp[1][i];
 		}
 
-		walkRight = new Animation(0.25f, walkFrames);
+		walkRight = new Animation(animSpeed, walkFrames);
 
 		walkFrames = new TextureRegion[6];
 		for (int i = 0; i < 6; i++) {
 			walkFrames[i] = tmp[3][i];
 		}
 
-		walkLeft = new Animation(0.25f, walkFrames);
+		walkLeft = new Animation(animSpeed, walkFrames);
 		walkFrames = new TextureRegion[1];
 		walkFrames[0] = tmp[1][1];
 		standRight = new Animation(0, walkFrames);
@@ -55,11 +55,11 @@ public class Nerd implements Movable {
 	}
 
 	public float getWidth() {
-		return currentFrame.getRegionWidth() * nerdAspectRatio;
+		return currentFrame.getRegionWidth() * aspectRatio;
 	}
 
 	public float getHeight() {
-		return currentFrame.getRegionHeight() * nerdAspectRatio;
+		return currentFrame.getRegionHeight() * aspectRatio;
 	}
 
 	public TextureRegion getFrame() {
@@ -105,6 +105,10 @@ public class Nerd implements Movable {
 	@Override
 	public void setLastState(STATE state) {
 		lastState = state;
+	}
+
+	public boolean getLoop() {
+		return true;
 	}
 
 	@Override

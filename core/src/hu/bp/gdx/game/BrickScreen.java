@@ -12,6 +12,7 @@ public class BrickScreen implements Screen {
 	final BrickGame game;
 
 	private Nerd nerd;
+	private Bomb bomb;
 
 	private TiledForeGround foreground;
 
@@ -45,6 +46,7 @@ public class BrickScreen implements Screen {
 		iProcessor = new BrickInput(nerd);
 		Gdx.input.setInputProcessor(iProcessor);
 
+		bomb = new Bomb(game);
 	}
 
 	@Override
@@ -64,6 +66,9 @@ public class BrickScreen implements Screen {
 		}
 		if (iProcessor.minus) {
 			camera.zoom -= 0.02;
+		}
+		if (iProcessor.space && !bomb.isActive()) {
+			bomb.reset(nerd.getX(), nerd.getY());
 		}
 	}
 
@@ -88,6 +93,14 @@ public class BrickScreen implements Screen {
 			stickyText.x, stickyText.y);
 
 		nerd.move(Gdx.graphics.getDeltaTime());
+
+		if (bomb.isActive()) {
+			bomb.move(Gdx.graphics.getDeltaTime());
+			batch.draw(
+				bomb.getFrame(), bomb.getX(), bomb.getY(), bomb.getWidth(),
+				bomb.getHeight());
+		}
+
 		batch.draw(
 			nerd.getFrame(), nerd.getX(), nerd.getY(), nerd.getWidth(),
 			nerd.getHeight());
