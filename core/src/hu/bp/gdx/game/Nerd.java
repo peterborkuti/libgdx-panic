@@ -10,17 +10,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * @author peter
  *
  */
-public class Nerd implements Movable {
+public class Nerd extends CanCollide implements Movable {
 	private STATE lastState = STATE.LEFT;
 	private STATE state = STATE.STOP;
-	private float x = 0;
-	private float y = Const.TILE_SIZE;
 	private float stateTime = 0;
 
 	private Animation walkRight;
 	private Animation walkLeft;
 	private Animation standRight;
 	private Animation standLeft;
+
+	private int lives = 5;
 
 	private TextureRegion currentFrame;
 
@@ -30,6 +30,7 @@ public class Nerd implements Movable {
 	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
 
 	public Nerd(BrickGame game) {
+		super(4, 4, aspectRatio, 24, 32);
 		TextureRegion[][] tmp = TextureRegion.split(game.nerdSheet,
 				game.nerdSheet.getWidth() / 12, game.nerdSheet.getHeight() / 8);
 		TextureRegion[] walkFrames = new TextureRegion[6];
@@ -52,6 +53,8 @@ public class Nerd implements Movable {
 		walkFrames = new TextureRegion[1];
 		walkFrames[0] = tmp[3][1];
 		standLeft = new Animation(0, walkFrames);
+
+		setXY(0, Const.TILE_SIZE);
 	}
 
 	public float getWidth() {
@@ -88,16 +91,6 @@ public class Nerd implements Movable {
 	}
 
 	@Override
-	public void setX(float _x) {
-		x = _x;
-	}
-
-	@Override
-	public void setY(float _y) {
-		y = _y;
-	}
-
-	@Override
 	public void setState(STATE _state) {
 		state = _state;
 	}
@@ -105,10 +98,6 @@ public class Nerd implements Movable {
 	@Override
 	public void setLastState(STATE state) {
 		lastState = state;
-	}
-
-	public boolean getLoop() {
-		return true;
 	}
 
 	@Override
@@ -123,6 +112,23 @@ public class Nerd implements Movable {
 		else if (state == STATE.RIGHT) {
 			x += delta;
 		}
+
+		countBoundary();
+	}
+
+	@Override
+	public void die() {
+		lives--;
+	}
+
+	public int getLives() {
+		return lives;
+	}
+
+	@Override
+	public boolean isAlive() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

@@ -48,7 +48,7 @@ public class BrickScreen implements Screen {
 		iProcessor = new BrickInput(nerd);
 		Gdx.input.setInputProcessor(iProcessor);
 
-		bomb = new Bomb(game);
+		bomb = new Bomb(game, nerd);
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
 			enemy[i] = new Enemy(game);
 			enemy[i].reset(i);
@@ -95,7 +95,7 @@ public class BrickScreen implements Screen {
 
 		Vector3 stickyText = camera.unproject(new Vector3(10, 20, 0));
 		font.draw(
-			batch, "FPS: " + Gdx.graphics.getFramesPerSecond(),
+			batch, "FPS: " + Gdx.graphics.getFramesPerSecond() + ", lives:" + nerd.getLives(),
 			stickyText.x, stickyText.y);
 
 		nerd.move(Gdx.graphics.getDeltaTime());

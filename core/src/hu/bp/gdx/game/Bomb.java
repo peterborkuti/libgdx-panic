@@ -10,13 +10,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * @author peter
  *
  */
-public class Bomb  {
-	private float x = 0;
-	private float y = Const.TILE_SIZE;
+public class Bomb extends CanCollide {
 	private float stateTime = 0;
 	private boolean active = false;
 
 	private Animation animation;
+
+	private CanCollide bob;
 
 	private TextureRegion currentFrame;
 
@@ -25,7 +25,9 @@ public class Bomb  {
 	public static final float animSpeed = 0.4f; // second / frame
 	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
 
-	public Bomb(BrickGame game) {
+	public Bomb(BrickGame game, CanCollide _bob) {
+		super(0, 0, aspectRatio, Const.TILE_SIZE, Const.TILE_SIZE);
+
 		TextureRegion[][] tmp = TextureRegion.split(game.bombSheet,
 				game.bombSheet.getWidth() / 9, game.bombSheet.getHeight() / 1);
 		TextureRegion[] frames = new TextureRegion[9];
@@ -34,6 +36,8 @@ public class Bomb  {
 		}
 
 		animation = new Animation(animSpeed, frames);
+
+		bob = _bob;
 	}
 
 	public void reset(float _x, float _y) {
@@ -41,6 +45,7 @@ public class Bomb  {
 		y = _y;
 		stateTime = 0;
 		active = true;
+		countBoundary();
 	}
 
 	public float getWidth() {
@@ -57,6 +62,13 @@ public class Bomb  {
 
 	public TextureRegion getFrame() {
 		currentFrame = animation.getKeyFrame(stateTime, false);
+		if (!animation.isAnimationFinished(stateTime)) {
+			if (animation.getKeyFrameIndex(stateTime) > 5) {
+				if (bob.getBoundary().overlaps(boundary)) {
+					bob.die();
+				}
+			}
+		}
 		if (animation.isAnimationFinished(stateTime)) {
 			active = false;
 		};
@@ -71,20 +83,24 @@ public class Bomb  {
 		return y;
 	}
 
-	public void setX(float _x) {
-		x = _x;
-	}
-
-	public void setY(float _y) {
-		y = _y;
-	}
-
 	public boolean getLoop() {
 		return false;
 	}
 
 	public void move(float deltaTime) {
 		stateTime += deltaTime;
+	}
+
+	@Override
+	public void die() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isAlive() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

@@ -3,8 +3,6 @@
  */
 package hu.bp.gdx.game;
 
-import hu.bp.gdx.game.Movable.STATE;
-
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -13,14 +11,12 @@ import com.badlogic.gdx.math.MathUtils;
  * @author peter
  *
  */
-public class Enemy implements Movable {
+public class Enemy extends CanCollide implements Movable {
 
 	private STATE state = STATE.RIGHT;
 	private static final int LEFT_MARGIN = 3; // empty margin in pixels
 	private static final int RIGHT_MARGIN = 2; // empty margin in pixels
 	
-	private float x = 0;
-	private float y = Const.TILE_SIZE + Const.FLOOR_HEIGHT;
 	private float stateTime = 0;
 	private boolean active = false;
 
@@ -34,6 +30,8 @@ public class Enemy implements Movable {
 	public static final float animVelocity = 5.0f * aspectRatio; // pixel moving / frame
 
 	public Enemy(BrickGame game) {
+		super(3, 2, aspectRatio, Const.TILE_SIZE, Const.TILE_SIZE);
+
 		TextureRegion[][] tmp = TextureRegion.split(game.enemySheet,
 				game.enemySheet.getWidth() / 5, game.enemySheet.getHeight() / 1);
 		TextureRegion[] frames = new TextureRegion[5];
@@ -42,7 +40,9 @@ public class Enemy implements Movable {
 		}
 
 		animation = new Animation(animSpeed, frames);
+		reset();
 	}
+
 
 	public void reset(int floor) {
 		x = MathUtils.random(0, Const.WORLD_WIDTH_UNIT - Const.TILE_SIZE * aspectRatio);
@@ -57,6 +57,7 @@ public class Enemy implements Movable {
 		} else {
 			state = STATE.LEFT;
 		}
+		countBoundary();
 	}
 
 	public void reset (int floor1, int floor2) {
@@ -100,14 +101,6 @@ public class Enemy implements Movable {
 		return y;
 	}
 
-	public void setX(float _x) {
-		x = _x;
-	}
-
-	public void setY(float _y) {
-		y = _y;
-	}
-
 	public void move(float deltaTime) {
 		stateTime += deltaTime;
 
@@ -127,6 +120,8 @@ public class Enemy implements Movable {
 				state = STATE.LEFT;
 			}
 		}
+
+		countBoundary();
 	}
 
 	@Override
@@ -139,6 +134,13 @@ public class Enemy implements Movable {
 	public void setLastState(STATE state) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public boolean isAlive() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
