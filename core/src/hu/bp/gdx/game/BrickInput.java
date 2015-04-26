@@ -5,25 +5,37 @@ import com.badlogic.gdx.InputAdapter;
 
 public class BrickInput extends InputAdapter {
 
-	public static boolean left = false;
-	public static boolean right = false;
 	public static boolean up = false;
 	public static boolean down = false;
+	public static boolean plus = false;
+	public static boolean minus = false;
+
+	private Movable movable; 
+
+	public BrickInput(Movable _movable) {
+		movable = _movable;
+	}
 
 	@Override
 	public boolean keyDown(int keycode) {
 		switch (keycode) {
 		case Keys.LEFT:
-			left = true;
+			movable.setState(Movable.STATE.LEFT);
 			break;
 		case Keys.RIGHT:
-			right = true;
+			movable.setState(Movable.STATE.RIGHT);
 			break;
 		case Keys.UP:
 			up = true;
 			break;
 		case Keys.DOWN:
 			down = true;
+			break;
+		case Keys.PLUS:
+			plus = true;
+			break;
+		case Keys.MINUS:
+			minus = true;
 			break;
 		}
 
@@ -34,16 +46,24 @@ public class BrickInput extends InputAdapter {
 	public boolean keyUp(int keycode) {
 		switch (keycode) {
 		case Keys.LEFT:
-			left = false;
+			movable.setState(Movable.STATE.STOP);
+			movable.setLastState(Movable.STATE.LEFT);
 			break;
 		case Keys.RIGHT:
-			right = false;
+			movable.setState(Movable.STATE.STOP);
+			movable.setLastState(Movable.STATE.RIGHT);
 			break;
 		case Keys.UP:
 			up = false;
 			break;
 		case Keys.DOWN:
 			down = false;
+			break;
+		case Keys.PLUS:
+			plus = false;
+			break;
+		case Keys.MINUS:
+			minus = false;
 			break;
 		}
 

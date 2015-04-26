@@ -6,9 +6,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 
 public class BrickScreen implements Screen {
 	final BrickGame game;
+
+	private Nerd nerd;
 
 	private TiledForeGround foreground;
 
@@ -17,7 +20,7 @@ public class BrickScreen implements Screen {
 	private BitmapFont font;
 	private SpriteBatch batch;
 
-	private BrickInput iProcessor= new BrickInput();
+	private BrickInput iProcessor;
 
 	private void _setupCamera() {
 		float aspectRatio = Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
@@ -38,6 +41,8 @@ public class BrickScreen implements Screen {
 
 		foreground = new TiledForeGround(game.brick, game.ladder);
 
+		nerd = new Nerd(game);
+		iProcessor = new BrickInput(nerd);
 		Gdx.input.setInputProcessor(iProcessor);
 
 	}
@@ -48,17 +53,17 @@ public class BrickScreen implements Screen {
 	}
 
 	private void _handleInput() {
-		if (iProcessor.left) {
-			camera.translate(-3, 0, 0);
-		}
-		if (iProcessor.right) {
-			camera.translate(3, 0, 0);
-		}
 		if (iProcessor.down) {
 			camera.translate(0, -3, 0);
 		}
 		if (iProcessor.up) {
 			camera.translate(0, 3, 0);
+		}
+		if (iProcessor.plus) {
+			camera.zoom += 0.02;
+		}
+		if (iProcessor.minus) {
+			camera.zoom -= 0.02;
 		}
 	}
 
@@ -66,12 +71,27 @@ public class BrickScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(100f / 255f, 100f / 255f, 250f / 255f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 		_handleInput();
+
 		camera.update();
 		foreground.getRenderer().setView(camera);
 		foreground.getRenderer().render();
+
+		batch.setProjectionMatrix(camera.combined);
+
 		batch.begin();
-		font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
+
+		Vector3 stickyText = camera.unproject(new Vector3(10, 20, 0));
+		font.draw(
+			batch, "FPS: " + Gdx.graphics.getFramesPerSecond(),
+			stickyText.x, stickyText.y);
+
+		nerd.move(Gdx.graphics.getDeltaTime());
+		batch.draw(
+			nerd.getFrame(), nerd.getX(), nerd.getY(), nerd.getWidth(),
+			nerd.getHeight());
+
 		batch.end();
 	}
 
