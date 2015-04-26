@@ -12,6 +12,7 @@ public class BrickGame extends Game {
 	public BitmapFont font;
 	public Texture nerdSheet;
 	public Texture bombSheet;
+	public Texture enemySheet;
 
 	
 	@Override
@@ -21,6 +22,7 @@ public class BrickGame extends Game {
 		ladder = new Texture("ladder.png");
 		bombSheet = new Texture("bomb_1x9_32x32.png");
 		nerdSheet = new Texture("nerd_sprite_12x8tiles_24x32pixels.png");
+		enemySheet = new Texture("cyborgpig_1x5_32x32.png");
 		font = new BitmapFont();
 		this.setScreen(new BrickScreen(this));
 	}

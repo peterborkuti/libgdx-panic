@@ -13,6 +13,7 @@ public class BrickScreen implements Screen {
 
 	private Nerd nerd;
 	private Bomb bomb;
+	private Enemy enemy;
 
 	private TiledForeGround foreground;
 
@@ -47,6 +48,8 @@ public class BrickScreen implements Screen {
 		Gdx.input.setInputProcessor(iProcessor);
 
 		bomb = new Bomb(game);
+		enemy = new Enemy(game);
+		enemy.reset(100, Const.FLOOR_HEIGHT * Const.TILE_SIZE + Const.TILE_SIZE);
 	}
 
 	@Override
@@ -94,6 +97,8 @@ public class BrickScreen implements Screen {
 
 		nerd.move(Gdx.graphics.getDeltaTime());
 
+		enemy.move(Gdx.graphics.getDeltaTime());
+
 		if (bomb.isActive()) {
 			bomb.move(Gdx.graphics.getDeltaTime());
 			batch.draw(
@@ -104,6 +109,10 @@ public class BrickScreen implements Screen {
 		batch.draw(
 			nerd.getFrame(), nerd.getX(), nerd.getY(), nerd.getWidth(),
 			nerd.getHeight());
+
+		batch.draw(
+				enemy.getFrame(), enemy.getX(), enemy.getY(), enemy.getWidth(),
+				enemy.getHeight());
 
 		batch.end();
 	}
