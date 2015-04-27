@@ -8,9 +8,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 
 public class BrickScreen implements Screen {
 	final BrickGame game;
+
+	private Array<CanCollide> ladders =
+		new Array<CanCollide>(Const.NUM_OF_FLOORS * Const.LADDERS_ON_A_FLOOR);
 
 	private Nerd nerd;
 	private Bomb bomb;
@@ -42,7 +46,7 @@ public class BrickScreen implements Screen {
 		font = new BitmapFont();
 		batch = new SpriteBatch();
 
-		foreground = new TiledForeGround(game.brick, game.ladder);
+		foreground = new TiledForeGround(game.brick, game.ladder, ladders);
 
 		nerd = new Nerd(game);
 		iProcessor = new BrickInput(nerd);
@@ -50,7 +54,7 @@ public class BrickScreen implements Screen {
 
 		bomb = new Bomb(game, nerd);
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
-			enemy[i] = new Enemy(game);
+			enemy[i] = new Enemy(game, ladders);
 			enemy[i].reset(i);
 		}
 	}

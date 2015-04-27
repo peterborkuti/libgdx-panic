@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 
 public class TiledForeGround {
 
@@ -17,10 +18,12 @@ public class TiledForeGround {
 
 	private Texture brick;
 	private Texture ladder;
+	private int[][] ladders;
 
-	public TiledForeGround(Texture _brick, Texture _ladder) {
+	public TiledForeGround(Texture _brick, Texture _ladder, int[][] ladders) {
 		brick = _brick;
 		ladder = _ladder;
+		this.ladders = ladders;
 
 		_createField();
 	}
@@ -31,6 +34,7 @@ public class TiledForeGround {
 
 	private void _createLadder(TiledMapTileLayer layer, int x1, int x2,
 			int floorY) {
+
 		for (int y = floorY + 1; y < floorY + Const.FLOOR_HEIGHT + 1; y++) {
 			_setCell(layer, ladder, x1, y);
 			_setCell(layer, ladder, x2, y);
@@ -51,7 +55,7 @@ public class TiledForeGround {
 		layer.setCell(x, y, cell);
 	}
 
-	private void createFloors(TiledMapTileLayer layer) {
+	private void _createFloors(TiledMapTileLayer layer) {
 		for (int y = 0; y < Const.WORLD_HEIGHT; y += Const.FLOOR_HEIGHT) {
 			for (int x = 0; x < Const.WORLD_WIDTH; x++) {
 				_setCell(layer, brick, x, y);
@@ -63,7 +67,7 @@ public class TiledForeGround {
 		TiledMapTileLayer layer =
 			new TiledMapTileLayer(Const.WORLD_WIDTH, Const.WORLD_HEIGHT, Const.TILE_SIZE, Const.TILE_SIZE);
 
-		createFloors(layer);
+		_createFloors(layer);
 		_createLadders(layer);
 
 		map = new TiledMap();

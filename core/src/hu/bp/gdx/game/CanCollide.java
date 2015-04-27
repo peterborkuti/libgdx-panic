@@ -42,6 +42,18 @@ public abstract class CanCollide {
 		y = 0;
 		countBoundary();
 	}
+
+	public CanCollide(int x, int y, int _width, int _height) {
+		leftMargin = 0;
+		rightMargin = 0;
+		aspectRatio = 1f;
+		width = _width;
+		height = _height;
+		this.x = x;
+		this.y = y;
+		countBoundary();
+	}
+
 	public Rectangle getBoundary() {
 		return boundary;
 	}
