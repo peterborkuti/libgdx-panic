@@ -1,7 +1,7 @@
 package hu.bp.gdx.game;
 
 public interface Movable {
-	public static enum STATE { STOP, LEFT, RIGHT, UP, DOWN};
+	public static enum STATE { STOP, LEFT, RIGHT, UP, DOWN, NONE};
 	public void setState(STATE state);
 	public void setLastState(STATE state);
 	public void move(float deltaTime);

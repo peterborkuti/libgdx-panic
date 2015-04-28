@@ -13,8 +13,7 @@ import com.badlogic.gdx.utils.Array;
 public class BrickScreen implements Screen {
 	final BrickGame game;
 
-	private Array<CanCollide> ladders =
-		new Array<CanCollide>(Const.NUM_OF_FLOORS * Const.LADDERS_ON_A_FLOOR);
+	private LadderManager ladders;
 
 	private Nerd nerd;
 	private Bomb bomb;
@@ -45,6 +44,8 @@ public class BrickScreen implements Screen {
 
 		font = new BitmapFont();
 		batch = new SpriteBatch();
+
+		ladders = new LadderManager();
 
 		foreground = new TiledForeGround(game.brick, game.ladder, ladders);
 

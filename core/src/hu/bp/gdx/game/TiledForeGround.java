@@ -9,7 +9,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
 
 public class TiledForeGround {
 
@@ -18,9 +17,10 @@ public class TiledForeGround {
 
 	private Texture brick;
 	private Texture ladder;
-	private int[][] ladders;
 
-	public TiledForeGround(Texture _brick, Texture _ladder, int[][] ladders) {
+	private LadderManager ladders;
+
+	public TiledForeGround(Texture _brick, Texture _ladder, LadderManager ladders) {
 		brick = _brick;
 		ladder = _ladder;
 		this.ladders = ladders;
@@ -34,7 +34,6 @@ public class TiledForeGround {
 
 	private void _createLadder(TiledMapTileLayer layer, int x1, int x2,
 			int floorY) {
-
 		for (int y = floorY + 1; y < floorY + Const.FLOOR_HEIGHT + 1; y++) {
 			_setCell(layer, ladder, x1, y);
 			_setCell(layer, ladder, x2, y);
@@ -42,9 +41,11 @@ public class TiledForeGround {
 	}
 
 	private void _createLadders(TiledMapTileLayer layer) {
-		for (int floorY = 0; floorY < Const.WORLD_HEIGHT; floorY += Const.FLOOR_HEIGHT) {
+		for (int floorY = 0, floor = 0; floorY < Const.WORLD_HEIGHT; floorY += Const.FLOOR_HEIGHT, floor++) {
 			int x1 = MathUtils.random(0, 2 * Const.WORLD_WIDTH / 3);
 			int x2 = MathUtils.random(x1 + 1, Const.WORLD_WIDTH);
+			ladders.setLadder(floor, 0, x1 * Const.TILE_SIZE);
+			ladders.setLadder(floor, 1, x2 * Const.TILE_SIZE);
 			_createLadder(layer, x1, x2, floorY);
 		}
 	}
@@ -65,7 +66,9 @@ public class TiledForeGround {
 
 	private void _createField() {
 		TiledMapTileLayer layer =
-			new TiledMapTileLayer(Const.WORLD_WIDTH, Const.WORLD_HEIGHT, Const.TILE_SIZE, Const.TILE_SIZE);
+			new TiledMapTileLayer(
+				Const.WORLD_WIDTH, Const.WORLD_HEIGHT,
+				Const.TILE_SIZE, Const.TILE_SIZE);
 
 		_createFloors(layer);
 		_createLadders(layer);
