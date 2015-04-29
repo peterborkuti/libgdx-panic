@@ -49,7 +49,7 @@ public class BrickScreen implements Screen {
 
 		foreground = new TiledForeGround(game.brick, game.ladder, ladders);
 
-		nerd = new Nerd(game);
+		nerd = new Nerd(game, ladders);
 		iProcessor = new BrickInput(nerd);
 		Gdx.input.setInputProcessor(iProcessor);
 
@@ -78,7 +78,7 @@ public class BrickScreen implements Screen {
 		if (iProcessor.minus) {
 			camera.zoom -= 0.02;
 		}
-		if (iProcessor.space && !bomb.isActive()) {
+		if (BrickInput.space && !bomb.isActive()) {
 			bomb.reset(nerd.getX(), nerd.getY());
 		}
 	}

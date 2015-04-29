@@ -31,8 +31,8 @@ public class LadderManager {
 	private boolean checkX(int x0, float x) {
 
 		return 
-			(x > (x0 + Const.TILE_SIZE / 4)) &&
-			(x < (x0 + 3 * Const.TILE_SIZE / 4));
+			(x == x0); /*&&
+			(x < (x0 + Const.TILE_SIZE / 4));*/
 	}
 
 

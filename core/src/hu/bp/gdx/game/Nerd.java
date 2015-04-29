@@ -15,6 +15,8 @@ public class Nerd extends CanCollide implements Movable {
 	private STATE state = STATE.STOP;
 	private float stateTime = 0;
 
+	private LadderManager ladders;
+
 	private Animation walkRight;
 	private Animation walkLeft;
 	private Animation standRight;
@@ -24,12 +26,12 @@ public class Nerd extends CanCollide implements Movable {
 
 	private TextureRegion currentFrame;
 
-	public static final float aspectRatio = 2f; //sprite was too small
+	public static final float aspectRatio = 1f; //sprite was too small
 
 	public static final float animSpeed = 0.05f; // second / frame
 	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
 
-	public Nerd(BrickGame game) {
+	public Nerd(BrickGame game, LadderManager ladders) {
 		super(4, 4, aspectRatio, 24, 32);
 		TextureRegion[][] tmp = TextureRegion.split(game.nerdSheet,
 				game.nerdSheet.getWidth() / 12, game.nerdSheet.getHeight() / 8);
@@ -55,6 +57,8 @@ public class Nerd extends CanCollide implements Movable {
 		standLeft = new Animation(0, walkFrames);
 
 		setXY(0, Const.TILE_SIZE);
+
+		this.ladders = ladders;
 	}
 
 	public float getWidth() {
@@ -92,6 +96,23 @@ public class Nerd extends CanCollide implements Movable {
 
 	@Override
 	public void setState(STATE _state) {
+		boolean goDown = ladders.canGoDown(x, y);
+
+		if ((_state == STATE.DOWN) && ladders.canGoDown(x, y)) {
+			state = _state;
+
+			return;
+		}
+		if ((_state == STATE.UP)) {
+			boolean goUp = ladders.canGoUp(x, y);
+
+			if (goUp) {
+				state = _state;
+			}
+
+			return;
+		}
+
 		state = _state;
 	}
 
@@ -111,6 +132,12 @@ public class Nerd extends CanCollide implements Movable {
 		}
 		else if (state == STATE.RIGHT) {
 			x += delta;
+		}
+		else if (state == STATE.UP) {
+			y += delta;
+		}
+		else if (state == STATE.DOWN) {
+			y -= delta;
 		}
 
 		countBoundary();

@@ -27,10 +27,10 @@ public class BrickInput extends InputAdapter {
 			movable.setState(Movable.STATE.RIGHT);
 			break;
 		case Keys.UP:
-			up = true;
+			movable.setState(Movable.STATE.UP);
 			break;
 		case Keys.DOWN:
-			down = true;
+			movable.setState(Movable.STATE.DOWN);
 			break;
 		case Keys.PLUS:
 			plus = true;
@@ -59,10 +59,12 @@ public class BrickInput extends InputAdapter {
 			movable.setLastState(Movable.STATE.RIGHT);
 			break;
 		case Keys.UP:
-			up = false;
+			movable.setState(Movable.STATE.STOP);
+			movable.setLastState(Movable.STATE.UP);
 			break;
 		case Keys.DOWN:
-			down = false;
+			movable.setState(Movable.STATE.STOP);
+			movable.setLastState(Movable.STATE.DOWN);
 			break;
 		case Keys.PLUS:
 			plus = false;
