@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  *
  */
 public class Nerd extends CanCollide implements Movable {
+
+	private static final int LADDER_TOLERANCE = 4;
 	private STATE lastState = STATE.LEFT;
 	private STATE state = STATE.STOP;
 	private float stateTime = 0;
@@ -96,18 +98,23 @@ public class Nerd extends CanCollide implements Movable {
 
 	@Override
 	public void setState(STATE _state) {
-		boolean goDown = ladders.canGoDown(x, y);
 
-		if ((_state == STATE.DOWN) && ladders.canGoDown(x, y)) {
-			state = _state;
-
-			return;
-		}
-		if ((_state == STATE.UP)) {
-			boolean goUp = ladders.canGoUp(x, y);
-
-			if (goUp) {
+		if (_state == STATE.DOWN) {
+			Ladder down = ladders.getLadderDown(x, y, LADDER_TOLERANCE);
+			if (down != null) {
 				state = _state;
+				x = down.getX();
+	
+				return;
+			}
+		}
+
+		if (_state == STATE.UP) {
+			Ladder up = ladders.getLadderUp(x, y, LADDER_TOLERANCE);
+
+			if (up != null) {
+				state = _state;
+				x = up.getX();
 			}
 
 			return;

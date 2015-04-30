@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.MathUtils;
  */
 public class Enemy extends CanCollide implements Movable {
 
+	private static int LADDER_TOLERANCE = 8; // pixels
+
 	private static final int LAST_STATE_COUNTER_MAX = 10;
 	private STATE lastStateSaver = STATE.NONE;
 	private int lastStateCounter = 0;
@@ -33,7 +35,7 @@ public class Enemy extends CanCollide implements Movable {
 
 	public static final float aspectRatio = 1f; //sprite was too small
 	public static final float animSpeed = 0.1f; // second / frame
-	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
+	public static final float animVelocity = 5.0f * aspectRatio; // pixel moving / frame
 
 	// Last X coordinate of the enemy
 	private static final float RIGHT_WORLD_BOUNDARY =
@@ -51,11 +53,13 @@ public class Enemy extends CanCollide implements Movable {
 
 		animation = new Animation(animSpeed, frames);
 		this.ladders = ladders;
-		reset();
+		reset(0);
 	}
 
 
 	public void reset(int floor) {
+		//Ladder l = ladders.getLadder(0, 0);
+		//x = l.getX() + 2;
 		x = MathUtils.random(
 			0, Const.WORLD_WIDTH_UNIT - Const.TILE_SIZE * aspectRatio);
 
@@ -132,6 +136,7 @@ public class Enemy extends CanCollide implements Movable {
 			if (y <= goalY) {
 				y = goalY;
 				lastState = state;
+				lastStateCounter = 0;
 				state = (Math.random() < 0.5) ? STATE.RIGHT : STATE.LEFT;
 			}
 		}
@@ -140,6 +145,7 @@ public class Enemy extends CanCollide implements Movable {
 			if (y >= goalY) {
 				y = goalY;
 				lastState = state;
+				lastStateCounter = 0;
 				state = (Math.random() < 0.5) ? STATE.RIGHT : STATE.LEFT;
 			}
 		}
@@ -148,6 +154,7 @@ public class Enemy extends CanCollide implements Movable {
 			if (x < - LEFT_MARGIN * aspectRatio) {
 				x = - LEFT_MARGIN * aspectRatio;
 				lastState = state;
+				lastStateCounter = 0;
 				state = STATE.RIGHT;
 			}
 		}
@@ -156,6 +163,7 @@ public class Enemy extends CanCollide implements Movable {
 			if (x > RIGHT_WORLD_BOUNDARY) {
 				x = RIGHT_WORLD_BOUNDARY;
 				lastState = state;
+				lastStateCounter = 0;
 				state = STATE.LEFT;
 			}
 		}
@@ -163,15 +171,20 @@ public class Enemy extends CanCollide implements Movable {
 		if (((state == STATE.LEFT) || (state == STATE.RIGHT)) &&
 			!((lastState == STATE.UP) || (lastState == STATE.DOWN))) {
 
-			int floor = BrickUtils.getFloorOfCoord(y);
+			Ladder up = ladders.getLadderUp(x, y, LADDER_TOLERANCE);
+			Ladder down = ladders.getLadderDown(x, y, LADDER_TOLERANCE);
 
-			if ((lastState != STATE.DOWN) && ladders.canGoDown(x, y)) {
-				goalY = BrickUtils.getYCoordOfFloor(floor - 1);
+			if ((lastState != STATE.DOWN) && (down != null)) {
+				goalY = BrickUtils.getYCoordOfFloor(down.getFloor());
+				x = down.getX();
+				lastStateCounter = 0;
 				lastState = state;
 				state = STATE.DOWN;
 			}
-			else if ((lastState != STATE.UP) && ladders.canGoUp(x, y)) {
-				goalY = BrickUtils.getYCoordOfFloor(floor + 1);
+			else if ((lastState != STATE.UP) && (up != null)) {
+				goalY = BrickUtils.getYCoordOfFloor(up.getFloor() + 1);
+				x = up.getX();
+				lastStateCounter = 0;
 				lastState = state;
 				state = STATE.UP;
 			}

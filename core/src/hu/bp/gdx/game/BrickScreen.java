@@ -57,6 +57,7 @@ public class BrickScreen implements Screen {
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
 			enemy[i] = new Enemy(game, ladders);
 			enemy[i].reset(i);
+			Gdx.app.log("Screen", "Enemy x:" + enemy[i].getX());
 		}
 	}
 
