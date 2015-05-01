@@ -3,6 +3,8 @@
  */
 package hu.bp.gdx.game;
 
+import java.util.HashSet;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -12,7 +14,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class Nerd extends CanCollide implements Movable {
 
-	private static final int LADDER_TOLERANCE = 4;
+	private static final int LADDER_TOLERANCE = 4; // for horizontal tolerance
+	private static final int FLOOR_TOLERANCE = 4; // for vertical tolerance
 	private STATE lastState = STATE.LEFT;
 	private STATE state = STATE.STOP;
 	private float stateTime = 0;
@@ -96,9 +99,36 @@ public class Nerd extends CanCollide implements Movable {
 		return y;
 	}
 
+	public void isOnFloor() {
+		
+	}
+
 	@Override
 	public void setState(STATE _state) {
+	
+		HashSet<STATE> allowedStates = new HashSet<STATE>();
 
+		if (ladders.isOnLadder(x, y, LADDER_TOLERANCE)) {
+			allowedStates.add(STATE.DOWN);
+			allowedStates.add(STATE.UP);
+			allowedStates.add(STATE.LEFT);
+			allowedStates.add(STATE.RIGHT);
+			allowedStates.add(STATE.STOP);
+		}
+		else if (BrickUtils.isOnFloor(y, FLOOR_TOLERANCE)) {
+			allowedStates.add(STATE.LEFT);
+			allowedStates.add(STATE.RIGHT);
+			allowedStates.add(STATE.STOP);
+		}
+		else {
+			//allowedStates.add(STATE.FALL);
+		}
+
+		if (!allowedStates.contains(_state)) {
+			return;
+		}
+
+		/*
 		if (_state == STATE.DOWN) {
 			Ladder down = ladders.getLadderDown(x, y, LADDER_TOLERANCE);
 			if (down != null) {
@@ -119,6 +149,7 @@ public class Nerd extends CanCollide implements Movable {
 
 			return;
 		}
+		*/
 
 		state = _state;
 	}
@@ -136,9 +167,11 @@ public class Nerd extends CanCollide implements Movable {
 
 		if (state == STATE.LEFT) {
 			x -= delta;
+			y = BrickUtils.alignIfOnFloor(y, FLOOR_TOLERANCE);
 		}
 		else if (state == STATE.RIGHT) {
 			x += delta;
+			y = BrickUtils.alignIfOnFloor(y, FLOOR_TOLERANCE);
 		}
 		else if (state == STATE.UP) {
 			y += delta;

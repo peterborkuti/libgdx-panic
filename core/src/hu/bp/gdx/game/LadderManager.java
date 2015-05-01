@@ -57,7 +57,14 @@ public class LadderManager {
 		return isLadder(floor, x, tolerance);
 	}
 
+	public boolean isOnLadder(float x, float y, int tolerance) {
+		return canGoUp(x, y, tolerance);
+	}
+
 	private boolean isLadder(int floor, float x, int tolerance) {
+		if (floor < 0 || floor >= Const.NUM_OF_FLOORS) {
+			return false;
+		}
 
 		return 
 			checkX(ladders[floor][0], x, tolerance) ||
