@@ -42,7 +42,7 @@ public class Nerd extends CanCollide implements Movable {
 	private static final float FLOOR_TOLERANCE = 8 * aspectRatio; // for vertical tolerance
 
 	public static final float animSpeed = 0.05f; // second / frame
-	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
+	public static final float animVelocity = 7.0f * aspectRatio; // pixel moving / frame
 
 	private static final float RIGHT_WORLD_BOUNDARY =
 			Const.WORLD_WIDTH_UNIT - (Const.TILE_SIZE - RIGHT_MARGIN) * aspectRatio;
@@ -121,9 +121,10 @@ public class Nerd extends CanCollide implements Movable {
 	}
 
 	public boolean isInSpace(float x, float y) {
-		return
-		 (ladders.isOnLadder(this)) &&
-		 !BrickUtils.isOnFloor(y, FLOOR_TOLERANCE);
+		boolean onLadder = ladders.isOnLadder(this);
+		boolean onFloor = BrickUtils.isOnFloor(y, FLOOR_TOLERANCE);
+
+		return !onLadder && !onFloor;
 	}
 
 	@Override

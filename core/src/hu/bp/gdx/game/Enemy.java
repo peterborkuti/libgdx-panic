@@ -35,7 +35,7 @@ public class Enemy extends CanCollide implements Movable {
 
 	public static final float aspectRatio = 1f; //sprite was too small
 	public static final float animSpeed = 0.1f; // second / frame
-	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
+	public static final float animVelocity = 5.0f * aspectRatio; // pixel moving / frame
 
 	// Last X coordinate of the enemy
 	private static final float RIGHT_WORLD_BOUNDARY =
