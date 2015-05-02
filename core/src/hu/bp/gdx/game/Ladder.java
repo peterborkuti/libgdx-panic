@@ -1,12 +1,12 @@
 package hu.bp.gdx.game;
 
-public class Ladder {
-	float x = 0;
+public class Ladder extends CanCollide {
 	int floor = 0;
 
 	public Ladder(float x, int floor) {
-		super();
-		this.x = x;
+		super(
+			x, BrickUtils.getYCoordOfFloor(floor),
+			Const.TILE_SIZE, Const.TILE_SIZE * Const.FLOOR_HEIGHT);
 		this.floor = floor;
 	}
 
@@ -24,5 +24,24 @@ public class Ladder {
 
 	public void setFloor(int floor) {
 		this.floor = floor;
+	}
+
+	@Override
+	public void die() {
+	}
+
+	@Override
+	public boolean isAlive() {
+		return true;
+	}
+
+	@Override
+	public float getLadderTolerance() {
+		return 0;
+	}
+
+	@Override
+	public float getFloorTolerance() {
+		return 0;
 	}
 }

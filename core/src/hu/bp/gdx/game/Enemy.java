@@ -35,7 +35,7 @@ public class Enemy extends CanCollide implements Movable {
 
 	public static final float aspectRatio = 1f; //sprite was too small
 	public static final float animSpeed = 0.1f; // second / frame
-	public static final float animVelocity = 5.0f * aspectRatio; // pixel moving / frame
+	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
 
 	// Last X coordinate of the enemy
 	private static final float RIGHT_WORLD_BOUNDARY =
@@ -58,8 +58,6 @@ public class Enemy extends CanCollide implements Movable {
 
 
 	public void reset(int floor) {
-		//Ladder l = ladders.getLadder(0, 0);
-		//x = l.getX() + 2;
 		x = MathUtils.random(
 			0, Const.WORLD_WIDTH_UNIT - Const.TILE_SIZE * aspectRatio);
 
@@ -117,20 +115,48 @@ public class Enemy extends CanCollide implements Movable {
 		return y;
 	}
 
-	public void move(float deltaTime) {
-		if (lastStateSaver == lastState) {
-			lastStateCounter++;
+	private void startClimb(Ladder ladder, STATE state) {
+		if (state == STATE.DOWN) {
+			goalY = BrickUtils.getYCoordOfFloor(ladder.getFloor());
 		}
-		if (lastStateCounter > LAST_STATE_COUNTER_MAX) {
-			lastStateCounter = 0;
-			lastStateSaver = STATE.STOP;
-			lastState = STATE.NONE;
+		else {
+			goalY = BrickUtils.getYCoordOfFloor(ladder.getFloor() + 1);
+		}
+		x = ladder.getX();
+		lastStateCounter = 0;
+		lastState = state;
+		this.state = state;
+	}
+
+	private void decideClimb() {
+		Ladder up = null;
+		if (lastState != STATE.DOWN) {
+			up = ladders.getLadderUp(this);
 		}
 
-		stateTime += deltaTime;
+		Ladder down = null;
+		if (lastState != STATE.UP) {
+			down = ladders.getLadderDown(this);
+		}
 
-		float delta = deltaTime / animSpeed * animVelocity;
+		if ((up != null) && (down != null)) {
+			if (Math.random() < 0.5) {
+				up = null;
+			}
+			else {
+				down = null;
+			}
+		}
 
+		if (down != null) {
+			startClimb(down, STATE.DOWN);
+		}
+		else if (up != null) {
+			startClimb(up, STATE.UP);
+		}
+	}
+
+	private void doMove(float delta) {
 		if (state == STATE.DOWN) {
 			y -= delta;
 			if (y <= goalY) {
@@ -167,27 +193,26 @@ public class Enemy extends CanCollide implements Movable {
 				state = STATE.LEFT;
 			}
 		}
+	}
 
-		if (((state == STATE.LEFT) || (state == STATE.RIGHT)) &&
-			!((lastState == STATE.UP) || (lastState == STATE.DOWN))) {
+	public void move(float deltaTime) {
+		if (lastStateSaver == lastState) {
+			lastStateCounter++;
+		}
+		if (lastStateCounter > LAST_STATE_COUNTER_MAX) {
+			lastStateCounter = 0;
+			lastStateSaver = STATE.STOP;
+			lastState = STATE.NONE;
+		}
 
-			Ladder up = ladders.getLadderUp(x, y, LADDER_TOLERANCE);
-			Ladder down = ladders.getLadderDown(x, y, LADDER_TOLERANCE);
+		stateTime += deltaTime;
 
-			if ((lastState != STATE.DOWN) && (down != null)) {
-				goalY = BrickUtils.getYCoordOfFloor(down.getFloor());
-				x = down.getX();
-				lastStateCounter = 0;
-				lastState = state;
-				state = STATE.DOWN;
-			}
-			else if ((lastState != STATE.UP) && (up != null)) {
-				goalY = BrickUtils.getYCoordOfFloor(up.getFloor() + 1);
-				x = up.getX();
-				lastStateCounter = 0;
-				lastState = state;
-				state = STATE.UP;
-			}
+		float delta = deltaTime / animSpeed * animVelocity;
+
+		doMove(delta);
+
+		if ((state == STATE.LEFT) || (state == STATE.RIGHT)) {
+			decideClimb();
 		}
 
 		countBoundary();
@@ -208,8 +233,19 @@ public class Enemy extends CanCollide implements Movable {
 
 	@Override
 	public boolean isAlive() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
+	}
+
+
+	@Override
+	public float getLadderTolerance() {
+		return LADDER_TOLERANCE;
+	}
+
+
+	@Override
+	public float getFloorTolerance() {
+		return 0;
 	}
 
 

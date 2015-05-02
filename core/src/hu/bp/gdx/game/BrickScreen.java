@@ -6,12 +6,16 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 public class BrickScreen implements Screen {
 	final BrickGame game;
+
+	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
 	private LadderManager ladders;
 
@@ -54,10 +58,11 @@ public class BrickScreen implements Screen {
 		Gdx.input.setInputProcessor(iProcessor);
 
 		bomb = new Bomb(game, nerd);
+
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
 			enemy[i] = new Enemy(game, ladders);
 			enemy[i].reset(i);
-			Gdx.app.log("Screen", "Enemy x:" + enemy[i].getX());
+			Gdx.app.log("Screen", "Enemy(" + enemy[i].getX() + "," + enemy[i].getY() + ")");
 		}
 	}
 
@@ -79,7 +84,7 @@ public class BrickScreen implements Screen {
 		if (iProcessor.minus) {
 			camera.zoom -= 0.02;
 		}
-		if (BrickInput.space && !bomb.isActive()) {
+		if (BrickInput.space && !bomb.isAlive()) {
 			bomb.reset(nerd.getX(), nerd.getY());
 		}
 	}
@@ -95,6 +100,7 @@ public class BrickScreen implements Screen {
 		foreground.getRenderer().setView(camera);
 		foreground.getRenderer().render();
 
+		shapeRenderer.setProjectionMatrix(camera.combined);
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
@@ -110,7 +116,7 @@ public class BrickScreen implements Screen {
 			enemy[i].move(Gdx.graphics.getDeltaTime());
 		}
 
-		if (bomb.isActive()) {
+		if (bomb.isAlive()) {
 			bomb.move(Gdx.graphics.getDeltaTime());
 			batch.draw(
 				bomb.getFrame(), bomb.getX(), bomb.getY(), bomb.getWidth(),
@@ -128,6 +134,11 @@ public class BrickScreen implements Screen {
 		}
 
 		batch.end();
+
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.rect(nerd.getX(), nerd.getY(), nerd.getWidth(), nerd.getHeight());
+		shapeRenderer.end();
+
 	}
 
 	@Override

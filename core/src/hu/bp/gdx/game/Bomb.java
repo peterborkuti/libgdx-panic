@@ -56,10 +56,6 @@ public class Bomb extends CanCollide {
 		return currentFrame.getRegionHeight() * aspectRatio;
 	}
 
-	public boolean isActive() {
-		return active;
-	}
-
 	public TextureRegion getFrame() {
 		currentFrame = animation.getKeyFrame(stateTime, false);
 		if (!animation.isAnimationFinished(stateTime)) {
@@ -93,14 +89,23 @@ public class Bomb extends CanCollide {
 
 	@Override
 	public void die() {
-		// TODO Auto-generated method stub
-		
+		active = false;
 	}
 
 	@Override
 	public boolean isAlive() {
 		// TODO Auto-generated method stub
-		return false;
+		return active;
+	}
+
+	@Override
+	public float getLadderTolerance() {
+		return 0;
+	}
+
+	@Override
+	public float getFloorTolerance() {
+		return 0;
 	}
 
 }

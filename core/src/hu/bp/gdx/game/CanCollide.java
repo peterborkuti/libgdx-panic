@@ -4,6 +4,11 @@ import com.badlogic.gdx.math.Rectangle;
 
 public abstract class CanCollide {
 
+	@Override
+	public String toString() {
+		return "CanCollide [boundary=" + boundary + "]";
+	}
+
 	protected Rectangle boundary = new Rectangle(0,0,0,0);
 	protected float x = 0;
 	protected float y = 0;
@@ -54,16 +59,31 @@ public abstract class CanCollide {
 		countBoundary();
 	}
 
+	public CanCollide(float x, float y, int width, int height) {
+		this((int)x, (int)y, width, height);
+	}
+	
+	/**
+	 * @return a <b>new</b> Rectangle object which is the boundary of the object
+	 */
 	public Rectangle getBoundary() {
-		return boundary;
+		return new Rectangle(boundary);
 	}
 
+	/**
+	 * Updates the boundary of the object
+	 */
 	protected void countBoundary() {
 		boundary.x = x + leftMargin * aspectRatio;
 		boundary.y = y;
 		boundary.width = (width - leftMargin - rightMargin) * aspectRatio;
 		boundary.height = height * aspectRatio;
 	}
+
+	public abstract float getLadderTolerance();
+
+	public abstract float getFloorTolerance();
+
 
 
 }
