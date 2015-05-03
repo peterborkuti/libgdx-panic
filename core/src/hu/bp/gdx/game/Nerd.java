@@ -8,8 +8,9 @@ import java.util.HashSet;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+
 /**
- * @author peter
+ * @author Peter Borkuti
  *
  */
 public class Nerd extends CanCollide implements Movable {

@@ -43,7 +43,7 @@ public class TiledForeGround {
 	private void _createLadders(TiledMapTileLayer layer) {
 		for (int floorY = 0, floor = 0; floorY < Const.WORLD_HEIGHT; floorY += Const.FLOOR_HEIGHT, floor++) {
 			int x1 = MathUtils.random(0, 2 * Const.WORLD_WIDTH / 3);
-			int x2 = MathUtils.random(x1 + 2, Const.WORLD_WIDTH);
+			int x2 = MathUtils.random(x1 + 2, Const.WORLD_WIDTH - 1);
 			ladders.setLadder(floor, 0, x1 * Const.TILE_SIZE);
 			ladders.setLadder(floor, 1, x2 * Const.TILE_SIZE);
 			_createLadder(layer, x1, x2, floorY);

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 
 /**
- * @author peter
+ * @author Peter Borkuti
  *
  * Translate the camera to always shows Bob with smooth vertical scrolling
  */
