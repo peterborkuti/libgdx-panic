@@ -65,7 +65,8 @@ public class LadderManager {
 
 		if (floor >= 0) {
 			for (int i = 0; i < NUM_OF_LADDERS; i++) {
-				if (ladders[floor][i].getBoundary().overlaps(rec)) {
+				if ((ladders[floor][i].getBoundary().overlaps(rec)) &&
+						(rec.y > ladders[floor][i].getBoundary().y)) {
 					l = ladders[floor][i];
 					break;
 				}

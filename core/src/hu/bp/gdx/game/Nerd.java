@@ -167,22 +167,7 @@ public class Nerd extends CanCollide implements Movable {
 		lastState = state;
 	}
 
-	@Override
-	public void move(float deltaTime) {
-
-		if (shield >= 0) {
-			shield -= deltaTime;
-		}
-
-		stateTime += deltaTime;
-
-		float delta = deltaTime / animSpeed * animVelocity;
-
-		if (isInSpace(x, y)) {
-			state = STATE.FALL;
-			delta *= 2;
-		}
-
+	private void doMove(float delta) {
 		if (state == STATE.LEFT) {
 			x -= delta;
 			y = BrickUtils.alignIfOnFloor(y, FLOOR_TOLERANCE);
@@ -202,18 +187,44 @@ public class Nerd extends CanCollide implements Movable {
 		}
 		else if (state == STATE.DOWN || state == STATE.FALL) {
 			y -= delta;
-			if (y < 0) {
-				die();
-			}
 		}
 
 		if (state == STATE.FALL && BrickUtils.isOnFloor(y, FLOOR_TOLERANCE)) {
 			y = BrickUtils.alignIfOnFloor(y, FLOOR_TOLERANCE);
 			state = STATE.STOP;
 		}
+	}
 
-		if ((state == STATE.FALL) && (ladders.isOnLadder(this))) {
+	private boolean badMove() {
+		return true;
+	}
+
+	@Override
+	public void move(float deltaTime) {
+		if (shield >= 0) {
+			shield -= deltaTime;
+		}
+
+		stateTime += deltaTime;
+
+		float delta = deltaTime / animSpeed * animVelocity;
+
+		float oldX = x;
+		float oldY = y;
+		STATE oldState = state;
+
+		doMove(delta);
+
+		if (badMove()) {
+			x = oldX;
+			y = oldY;
 			state = STATE.STOP;
+			return;
+		}
+
+		if (isInSpace(x, y)) {
+			state = STATE.FALL;
+			delta *= 2;
 		}
 
 		countBoundary();
