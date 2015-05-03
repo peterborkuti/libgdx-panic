@@ -32,19 +32,19 @@ public class BrickScreen implements Screen {
 
 	private BrickInput iProcessor;
 
+	private CameraPosition center;
+
 	private void _setupCamera() {
 		float aspectRatio = Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
 		int pixelSize = Const.TILE_SIZE * Const.SCREEN_SIZE;
 
-		camera = new OrthographicCamera();
 		camera.setToOrtho(false, aspectRatio * pixelSize, pixelSize);
+		center.update();
 		camera.update();
 	}
 
 	public BrickScreen(final BrickGame bGame) {
 		game = bGame;
-
-		_setupCamera();
 
 		font = new BitmapFont();
 		batch = new SpriteBatch();
@@ -64,6 +64,12 @@ public class BrickScreen implements Screen {
 			enemy[i].reset(i);
 			Gdx.app.log("Screen", "Enemy(" + enemy[i].getX() + "," + enemy[i].getY() + ")");
 		}
+
+		camera = new OrthographicCamera();
+		center = new CameraPosition(camera, nerd, Const.TILE_SIZE * Const.SCREEN_SIZE);
+
+		_setupCamera();
+
 	}
 
 	@Override
@@ -96,7 +102,8 @@ public class BrickScreen implements Screen {
 
 		_handleInput();
 
-		camera.update();
+		center.update();
+		//camera.update();
 		foreground.getRenderer().setView(camera);
 		foreground.getRenderer().render();
 
@@ -143,8 +150,7 @@ public class BrickScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		_setupCamera();
+		camera.update();
 	}
 
 	@Override
