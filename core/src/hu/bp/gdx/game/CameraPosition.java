@@ -1,6 +1,5 @@
 package hu.bp.gdx.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 
@@ -64,7 +63,6 @@ public class CameraPosition {
 	 */
 	public void update() {
 		Vector3 position = cam.position;
-		Gdx.app.log("position", "pos:" + position);
 		float newY = position.y;
 		float delta = bob.y - position.y;
 		float absDelta = Math.abs(delta);
