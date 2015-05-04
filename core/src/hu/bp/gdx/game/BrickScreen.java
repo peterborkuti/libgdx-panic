@@ -57,10 +57,10 @@ public class BrickScreen implements Screen {
 		iProcessor = new BrickInput(nerd);
 		Gdx.input.setInputProcessor(iProcessor);
 
-		bomb = new Bomb(game, nerd);
+		bomb = new Bomb(game, nerd, foreground);
 
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
-			enemy[i] = new Enemy(game, ladders);
+			enemy[i] = new Enemy(game, ladders, foreground, nerd);
 			enemy[i].reset(i);
 			Gdx.app.log("Screen", "Enemy(" + enemy[i].getX() + "," + enemy[i].getY() + ")");
 		}

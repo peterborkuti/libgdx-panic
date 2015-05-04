@@ -16,16 +16,19 @@ public class Bomb extends CanCollide {
 
 	private Animation animation;
 
+	private int floor;
+
 	private CanCollide bob;
 
 	private TextureRegion currentFrame;
 
+	private TiledForeGround foreGround;
 	public static final float aspectRatio = 1.5f; //sprite was too small
 
 	public static final float animSpeed = 0.4f; // second / frame
 	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
 
-	public Bomb(BrickGame game, CanCollide _bob) {
+	public Bomb(BrickGame game, CanCollide _bob, TiledForeGround foreGround) {
 		super(0, 0, aspectRatio, Const.TILE_SIZE, Const.TILE_SIZE);
 
 		TextureRegion[][] tmp = TextureRegion.split(game.bombSheet,
@@ -38,10 +41,13 @@ public class Bomb extends CanCollide {
 		animation = new Animation(animSpeed, frames);
 
 		bob = _bob;
+
+		this.foreGround = foreGround;
 	}
 
 	public void reset(float x, float y) {
-		this.y = BrickUtils.getYCoordOfFloor(BrickUtils.getFloorOfCoord(y));
+		floor = BrickUtils.getFloorOfCoord(y);
+		this.y = BrickUtils.getYCoordOfFloor(floor);
 		this.x = (float)Math.floor(x / Const.TILE_SIZE) * Const.TILE_SIZE;
 		stateTime = 0;
 		active = true;
@@ -66,7 +72,7 @@ public class Bomb extends CanCollide {
 			}
 		}
 		if (animation.isAnimationFinished(stateTime)) {
-			active = false;
+			die();
 		};
 		return currentFrame;
 	}
@@ -90,6 +96,7 @@ public class Bomb extends CanCollide {
 	@Override
 	public void die() {
 		active = false;
+		foreGround.setCellToEmpty(x, y - Const.TILE_SIZE);
 	}
 
 	@Override

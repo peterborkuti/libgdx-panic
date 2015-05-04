@@ -92,6 +92,21 @@ public class TiledForeGround {
 		renderer = new OrthogonalTiledMapRenderer(map);
 	}
 
+	public void setCellToEmpty(float x, float y) {
+		int r = (int) Math.floor(y / Const.TILE_SIZE);
+		int c = (int) Math.floor(x / Const.TILE_SIZE);
+
+		TYPE type = TYPE.none;
+
+		if (r < Const.WORLD_HEIGHT && r >= 0 && c < Const.WORLD_WIDTH
+			&& c >= 0) {
+			types[c][r] = type;
+		}
+
+		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
+		layer.setCell(c, r, null);
+	}
+
 	public Tile getCell(float x, float y) {
 		int r = (int) Math.floor(y / Const.TILE_SIZE);
 		int c = (int) Math.floor(x / Const.TILE_SIZE);

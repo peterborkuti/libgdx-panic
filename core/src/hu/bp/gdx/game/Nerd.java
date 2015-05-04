@@ -125,8 +125,11 @@ public class Nerd extends CanCollide implements Movable {
 	public boolean isInSpace(float x, float y) {
 		boolean onLadder = ladders.isOnLadder(this);
 		boolean onFloor = BrickUtils.isOnFloor(y, FLOOR_TOLERANCE);
+		boolean onHole =
+			(foreGround.getCell(x, y - Const.TILE_SIZE).getType() ==
+			TiledForeGround.TYPE.none);
 
-		return !onLadder && !onFloor;
+		return !onLadder && !onFloor || onHole;
 	}
 
 	@Override

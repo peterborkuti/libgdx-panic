@@ -3,6 +3,8 @@
  */
 package hu.bp.gdx.game;
 
+import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -41,7 +43,10 @@ public class Enemy extends CanCollide implements Movable {
 	private static final float RIGHT_WORLD_BOUNDARY =
 			Const.WORLD_WIDTH_UNIT - (Const.TILE_SIZE - RIGHT_MARGIN) * aspectRatio;
 
-	public Enemy(BrickGame game, LadderManager ladders) {
+	private TiledForeGround foreGround;
+	private Nerd nerd;
+	
+	public Enemy(BrickGame game, LadderManager ladders, TiledForeGround foreGround, Nerd nerd) {
 		super(3, 2, aspectRatio, Const.TILE_SIZE, Const.TILE_SIZE);
 
 		TextureRegion[][] tmp = TextureRegion.split(game.enemySheet,
@@ -53,6 +58,8 @@ public class Enemy extends CanCollide implements Movable {
 
 		animation = new Animation(animSpeed, frames);
 		this.ladders = ladders;
+		this.foreGround = foreGround;
+		this.nerd = nerd;
 		reset(0);
 	}
 
@@ -128,7 +135,7 @@ public class Enemy extends CanCollide implements Movable {
 		this.state = state;
 	}
 
-	private void decideClimb() {
+	private void decideRandomClimb() {
 		Ladder up = null;
 		int floor = BrickUtils.getFloorOfCoord(y);
 
@@ -158,8 +165,19 @@ public class Enemy extends CanCollide implements Movable {
 		}
 	}
 
+	private void decideClimb() {
+		if (nerd.y < y) {
+			Ladder down = ladders.getLadderDown(this);
+			if (down != null) startClimb(down, STATE.DOWN);
+		}
+		else if (nerd.y > y) {
+			Ladder up = ladders.getLadderUp(this);
+			if (up != null) startClimb(up, STATE.UP);
+		}
+	}
+
 	private void doMove(float delta) {
-		if (state == STATE.DOWN) {
+		if (state == STATE.DOWN || state == STATE.FALL) {
 			y -= delta;
 			if (y <= goalY) {
 				y = goalY;
@@ -213,7 +231,13 @@ public class Enemy extends CanCollide implements Movable {
 
 		doMove(delta);
 
-		if ((state == STATE.LEFT) || (state == STATE.RIGHT)) {
+		Tile tile = foreGround.getCell(x + LEFT_MARGIN, y - Const.TILE_SIZE);
+
+		if (TiledForeGround.TYPE.none == tile.getType()) {
+			state = STATE.FALL;
+			goalY = BrickUtils.getYCoordOfFloor(BrickUtils.getFloorOfCoord(y) - 1);
+		}
+		else if ((state == STATE.LEFT) || (state == STATE.RIGHT)) {
 			decideClimb();
 		}
 
