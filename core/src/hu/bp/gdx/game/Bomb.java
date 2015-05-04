@@ -40,9 +40,9 @@ public class Bomb extends CanCollide {
 		bob = _bob;
 	}
 
-	public void reset(float _x, float _y) {
-		x = _x;
-		y = _y;
+	public void reset(float x, float y) {
+		this.y = BrickUtils.getYCoordOfFloor(BrickUtils.getFloorOfCoord(y));
+		this.x = (float)Math.floor(x / Const.TILE_SIZE) * Const.TILE_SIZE;
 		stateTime = 0;
 		active = true;
 		countBoundary();
