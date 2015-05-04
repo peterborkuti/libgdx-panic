@@ -1,6 +1,7 @@
 package hu.bp.gdx.game;
 
 public class Ladder extends CanCollide {
+
 	int floor = 0;
 
 	public Ladder(float x, int floor) {

@@ -24,6 +24,7 @@ public class Nerd extends CanCollide implements Movable {
 	private static final int MAX_SHIELD = 3;
 
 	private LadderManager ladders;
+	private TiledForeGround foreGround;
 
 	private Animation walkRight;
 	private Animation walkLeft;
@@ -54,7 +55,7 @@ public class Nerd extends CanCollide implements Movable {
 	 */
 	private float shield = MAX_SHIELD;
 
-	public Nerd(BrickGame game, LadderManager ladders) {
+	public Nerd(BrickGame game, LadderManager ladders, TiledForeGround foreGround) {
 		super(4, 4, aspectRatio, 24, 32);
 		TextureRegion[][] tmp = TextureRegion.split(game.nerdSheet,
 				game.nerdSheet.getWidth() / 12, game.nerdSheet.getHeight() / 8);
@@ -82,6 +83,7 @@ public class Nerd extends CanCollide implements Movable {
 		setXY(0, Const.TILE_SIZE);
 
 		this.ladders = ladders;
+		this.foreGround = foreGround;
 	}
 
 	public float getWidth() {
@@ -130,6 +132,7 @@ public class Nerd extends CanCollide implements Movable {
 
 	@Override
 	public void setState(STATE _state) {
+		/*
 		HashSet<STATE> allowedStates = new HashSet<STATE>();
 
 		if (ladders.getLadderDown(this) != null) {
@@ -159,6 +162,10 @@ public class Nerd extends CanCollide implements Movable {
 
 		if (allowedStates.contains(_state)) {
 			state = _state;;
+		}
+		*/
+		if (_state != STATE.FALL) {
+			state = _state;
 		}
 	}
 
@@ -196,7 +203,12 @@ public class Nerd extends CanCollide implements Movable {
 	}
 
 	private boolean badMove() {
-		return true;
+		Tile cell = foreGround.getCell(x, y);
+		if ((cell.getType() == TiledForeGround.TYPE.brick)) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public class BrickScreen implements Screen {
 
 		foreground = new TiledForeGround(game.brick, game.ladder, ladders);
 
-		nerd = new Nerd(game, ladders);
+		nerd = new Nerd(game, ladders, foreground);
 		iProcessor = new BrickInput(nerd);
 		Gdx.input.setInputProcessor(iProcessor);
 

@@ -1,5 +1,6 @@
 package hu.bp.gdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -23,7 +24,7 @@ public class TiledForeGround {
 
 	private LadderManager ladders;
 
-	private TYPE[][] types = new TYPE[Const.WORLD_WIDTH][Const.WORLD_HEIGHT];
+	private TYPE[][] types = new TYPE[Const.WORLD_WIDTH + 1][Const.WORLD_HEIGHT + 1];
 
 	public TiledForeGround(Texture _brick, Texture _ladder, LadderManager ladders) {
 		brick = _brick;
@@ -41,6 +42,7 @@ public class TiledForeGround {
 			int floorY) {
 
 		for (int y = floorY + 1; y < floorY + Const.FLOOR_HEIGHT + 1; y++) {
+			Gdx.app.log("TiledForeground", "createLadder " + x1 + "," + x2 + "," + y);
 			types[x1][y] = TYPE.ladder;
 			types[x2][y] = TYPE.ladder;
 			_setCell(layer, ladder, x1, y);
