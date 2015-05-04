@@ -3,8 +3,6 @@
  */
 package hu.bp.gdx.game;
 
-import java.util.HashSet;
-
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -35,6 +33,7 @@ public class Nerd extends CanCollide implements Movable {
 
 	private TextureRegion currentFrame;
 
+	private static final int UP_MARGIN = 3;
 	private static final int LEFT_MARGIN = 5; // empty margin in pixels
 	private static final int RIGHT_MARGIN = 5; // empty margin in pixels
 
@@ -202,12 +201,23 @@ public class Nerd extends CanCollide implements Movable {
 		}
 	}
 
-	private boolean badMove() {
-		Tile cell = foreGround.getCell(x, y);
+	private boolean badMove(STATE oldState) {
+		Tile cell = null;
+
+		// left, down, falling
+		cell = foreGround.getCell(x, y);
+
+		if (oldState == STATE.RIGHT) {
+			cell = foreGround.getCell(x + width - LEFT_MARGIN, y);
+		}
+		else if (oldState == STATE.UP) {
+			cell = foreGround.getCell(x, y + height - UP_MARGIN);
+		}
+
 		if ((cell.getType() == TiledForeGround.TYPE.brick)) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -227,7 +237,7 @@ public class Nerd extends CanCollide implements Movable {
 
 		doMove(delta);
 
-		if (badMove()) {
+		if (badMove(oldState)) {
 			x = oldX;
 			y = oldY;
 			state = STATE.STOP;

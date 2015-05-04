@@ -63,10 +63,10 @@ public class LadderManager {
 	private Ladder getLadder(Rectangle rec, int floor) {
 		Ladder l = null;
 
-		if (floor >= 0) {
+		if (floor >= 0 && floor < Const.NUM_OF_FLOORS) {
 			for (int i = 0; i < NUM_OF_LADDERS; i++) {
 				if ((ladders[floor][i].getBoundary().overlaps(rec)) &&
-						(rec.y > ladders[floor][i].getBoundary().y)) {
+						(rec.y >= ladders[floor][i].getBoundary().y)) {
 					l = ladders[floor][i];
 					break;
 				}

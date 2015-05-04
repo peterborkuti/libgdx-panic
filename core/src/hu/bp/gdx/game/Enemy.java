@@ -130,7 +130,9 @@ public class Enemy extends CanCollide implements Movable {
 
 	private void decideClimb() {
 		Ladder up = null;
-		if (lastState != STATE.DOWN) {
+		int floor = BrickUtils.getFloorOfCoord(y);
+
+		if (lastState != STATE.DOWN && floor < Const.NUM_OF_FLOORS) {
 			up = ladders.getLadderUp(this);
 		}
 
