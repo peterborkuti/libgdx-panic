@@ -233,7 +233,7 @@ public class Enemy extends CanCollide implements Movable {
 
 		Tile tile = foreGround.getCell(x + LEFT_MARGIN, y - Const.TILE_SIZE);
 
-		if (TiledForeGround.TYPE.none == tile.getType()) {
+		if (state != STATE.FALL && TiledForeGround.TYPE.none == tile.getType()) {
 			state = STATE.FALL;
 			goalY = BrickUtils.getYCoordOfFloor(BrickUtils.getFloorOfCoord(y) - 1);
 		}
