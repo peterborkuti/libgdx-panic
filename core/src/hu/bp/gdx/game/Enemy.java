@@ -45,7 +45,12 @@ public class Enemy extends CanCollide implements Movable {
 
 	private TiledForeGround foreGround;
 	private Nerd nerd;
-	
+	/**
+	 * How many levels I falled in one soar
+	 * If it is >= game.leve
+	 */
+	private int falledLevels;
+	private BrickGame game;
 	public Enemy(BrickGame game, LadderManager ladders, TiledForeGround foreGround, Nerd nerd) {
 		super(3, 2, aspectRatio, Const.TILE_SIZE, Const.TILE_SIZE);
 
@@ -60,6 +65,7 @@ public class Enemy extends CanCollide implements Movable {
 		this.ladders = ladders;
 		this.foreGround = foreGround;
 		this.nerd = nerd;
+		this.game = game;
 		reset(0);
 	}
 
@@ -180,10 +186,22 @@ public class Enemy extends CanCollide implements Movable {
 		if (state == STATE.DOWN || state == STATE.FALL) {
 			y -= delta;
 			if (y <= goalY) {
-				y = goalY;
-				lastState = state;
-				lastStateCounter = 0;
-				state = (Math.random() < 0.5) ? STATE.RIGHT : STATE.LEFT;
+				if (state == STATE.FALL) {
+					falledLevels++;
+				}
+				Tile tile = foreGround.getCell(x + LEFT_MARGIN, y - Const.TILE_SIZE);
+				if (TiledForeGround.TYPE.none == tile.getType()) {
+					goalY = BrickUtils.getYCoordOfFloor(BrickUtils.getFloorOfCoord(y) - 1);
+				}
+				else {
+					if (falledLevels >= game.level) {
+						die();
+					}
+					y = goalY;
+					lastState = state;
+					lastStateCounter = 0;
+					state = (Math.random() < 0.5) ? STATE.RIGHT : STATE.LEFT;
+				}
 			}
 		}
 		else if (state == STATE.UP) {

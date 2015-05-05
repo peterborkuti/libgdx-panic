@@ -14,6 +14,11 @@ public class BrickGame extends Game {
 	public Texture bombSheet;
 	public Texture enemySheet;
 
+	/**
+	 * Shows how many floors the enemy has to fall to die
+	 */
+	public int level;
+
 	
 	@Override
 	public void create () {
@@ -24,6 +29,7 @@ public class BrickGame extends Game {
 		nerdSheet = new Texture("nerd_sprite_12x8tiles_24x32pixels.png");
 		enemySheet = new Texture("cyborgpig_1x5_32x32.png");
 		font = new BitmapFont();
+		level = 1;
 		this.setScreen(new BrickScreen(this));
 	}
 
