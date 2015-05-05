@@ -108,15 +108,9 @@ public class Enemy extends CanCollide implements Movable {
 		active = false;
 	}
 
-	public boolean isActive() {
-		return active;
-	}
-
 	public TextureRegion getFrame() {
 		currentFrame = animation.getKeyFrame(stateTime, true);
-		if (animation.isAnimationFinished(stateTime)) {
-			active = false;
-		};
+
 		return currentFrame;
 	}
 
@@ -186,10 +180,14 @@ public class Enemy extends CanCollide implements Movable {
 		if (state == STATE.DOWN || state == STATE.FALL) {
 			y -= delta;
 			if (y <= goalY) {
+				y = goalY;
+
 				if (state == STATE.FALL) {
 					falledLevels++;
 				}
-				Tile tile = foreGround.getCell(x + LEFT_MARGIN, y - Const.TILE_SIZE);
+
+				Tile tile = foreGround.getCell(x + LEFT_MARGIN, y - Const.TILE_SIZE / 2);
+
 				if (TiledForeGround.TYPE.none == tile.getType()) {
 					goalY = BrickUtils.getYCoordOfFloor(BrickUtils.getFloorOfCoord(y) - 1);
 				}
@@ -197,7 +195,10 @@ public class Enemy extends CanCollide implements Movable {
 					if (falledLevels >= game.level) {
 						die();
 					}
-					y = goalY;
+					else {
+						falledLevels = 0;
+					}
+
 					lastState = state;
 					lastStateCounter = 0;
 					state = (Math.random() < 0.5) ? STATE.RIGHT : STATE.LEFT;
@@ -249,6 +250,10 @@ public class Enemy extends CanCollide implements Movable {
 
 		doMove(delta);
 
+		if (!isAlive()) {
+			return;
+		}
+
 		Tile tile = foreGround.getCell(x + LEFT_MARGIN, y - Const.TILE_SIZE);
 
 		if (state != STATE.FALL && TiledForeGround.TYPE.none == tile.getType()) {
@@ -277,7 +282,7 @@ public class Enemy extends CanCollide implements Movable {
 
 	@Override
 	public boolean isAlive() {
-		return true;
+		return active;
 	}
 
 

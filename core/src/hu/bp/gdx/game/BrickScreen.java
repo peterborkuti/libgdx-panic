@@ -120,7 +120,9 @@ public class BrickScreen implements Screen {
 		nerd.move(Gdx.graphics.getDeltaTime());
 
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
-			enemy[i].move(Gdx.graphics.getDeltaTime());
+			if (enemy[i].isAlive()) {
+				enemy[i].move(Gdx.graphics.getDeltaTime());
+			}
 		}
 
 		if (bomb.isAlive()) {
@@ -135,9 +137,11 @@ public class BrickScreen implements Screen {
 			nerd.getHeight());
 
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
-			batch.draw(
-				enemy[i].getFrame(), enemy[i].getX(), enemy[i].getY(), enemy[i].getWidth(),
-				enemy[i].getHeight());
+			if (enemy[i].isAlive()) {
+				batch.draw(
+					enemy[i].getFrame(), enemy[i].getX(), enemy[i].getY(), enemy[i].getWidth(),
+					enemy[i].getHeight());
+			}
 		}
 
 		batch.end();
