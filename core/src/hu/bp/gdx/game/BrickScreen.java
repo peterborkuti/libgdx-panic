@@ -72,6 +72,12 @@ public class BrickScreen implements Screen {
 
 	}
 
+	private void newScreen() {
+		
+		bomb.setBombs(game.level + 1);
+		
+	}
+
 	@Override
 	public void show() {
 

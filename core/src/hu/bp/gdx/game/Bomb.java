@@ -28,6 +28,16 @@ public class Bomb extends CanCollide {
 	public static final float animSpeed = 0.4f; // second / frame
 	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
 
+	private int bombs = 0;
+
+	public int getBombs() {
+		return bombs;
+	}
+
+	public void setBombs(int bombs) {
+		this.bombs = bombs;
+	}
+
 	public Bomb(BrickGame game, CanCollide _bob, TiledForeGround foreGround) {
 		super(0, 0, aspectRatio, Const.TILE_SIZE, Const.TILE_SIZE);
 
@@ -45,13 +55,17 @@ public class Bomb extends CanCollide {
 		this.foreGround = foreGround;
 	}
 
+	
+
 	public void reset(float x, float y) {
-		floor = BrickUtils.getFloorOfCoord(y);
-		this.y = BrickUtils.getYCoordOfFloor(floor);
-		this.x = (float)Math.floor(x / Const.TILE_SIZE) * Const.TILE_SIZE;
-		stateTime = 0;
-		active = true;
-		countBoundary();
+		if (bombs > 0) {
+			floor = BrickUtils.getFloorOfCoord(y);
+			this.y = BrickUtils.getYCoordOfFloor(floor);
+			this.x = (float)Math.floor(x / Const.TILE_SIZE) * Const.TILE_SIZE;
+			stateTime = 0;
+			active = true;
+			countBoundary();
+		}
 	}
 
 	public float getWidth() {
@@ -95,6 +109,7 @@ public class Bomb extends CanCollide {
 
 	@Override
 	public void die() {
+		bombs--;
 		active = false;
 		int floor = BrickUtils.getFloorOfCoord(y);
 		if (floor > 0) {
