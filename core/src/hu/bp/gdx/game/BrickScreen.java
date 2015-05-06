@@ -68,12 +68,12 @@ public class BrickScreen implements Screen {
 
 		_setupCamera();
 
-		newScreen();
+		newScreen(1);
 
 	}
 
-	private void newScreen() {
-		game.level++;
+	private void newScreen(int level) {
+		game.level = level;
 		bomb.setBombs(game.level + 1);
 		foreground.createField();
 		nerd.init();
@@ -107,6 +107,18 @@ public class BrickScreen implements Screen {
 		}
 	}
 
+	private void scoreBoard(int enemies) {
+		Vector3 stickyText = camera.unproject(new Vector3(10, 20, 0));
+		font.draw(
+			batch,
+			"FPS:  " + Gdx.graphics.getFramesPerSecond() + ", " +
+			"Lives:" + nerd.getLives() + ", " +
+			"Bombs:" + bomb.getBombs() + ", " +
+			"Level:" + game.level + ", " +
+			"Enemies:" + enemies,
+			stickyText.x, stickyText.y);
+	}
+
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(100f / 255f, 100f / 255f, 250f / 255f, 1f);
@@ -124,11 +136,6 @@ public class BrickScreen implements Screen {
 
 		batch.begin();
 
-		Vector3 stickyText = camera.unproject(new Vector3(10, 20, 0));
-		font.draw(
-			batch, "FPS: " + Gdx.graphics.getFramesPerSecond() + ", lives:" + nerd.getLives(),
-			stickyText.x, stickyText.y);
-
 		nerd.move(Gdx.graphics.getDeltaTime());
 
 		int enemiesLeft = 0;
@@ -138,6 +145,8 @@ public class BrickScreen implements Screen {
 				enemy[i].move(Gdx.graphics.getDeltaTime());
 			}
 		}
+
+		scoreBoard(enemiesLeft);
 
 		if (bomb.isAlive()) {
 			bomb.move(Gdx.graphics.getDeltaTime());
@@ -165,7 +174,11 @@ public class BrickScreen implements Screen {
 		shapeRenderer.end();
 
 		if (enemiesLeft == 0) {
-			newScreen();
+			newScreen(game.level++);
+		}
+
+		if (bomb.getBombs() <= 0) {
+			newScreen(game.level);
 		}
 	}
 
