@@ -79,10 +79,14 @@ public class Nerd extends CanCollide implements Movable {
 		walkFrames[0] = tmp[3][1];
 		standLeft = new Animation(0, walkFrames);
 
-		setXY(0, Const.TILE_SIZE);
 
 		this.ladders = ladders;
 		this.foreGround = foreGround;
+	}
+
+	public void init() {
+		setXY(0, Const.TILE_SIZE);
+		lives = 5;
 	}
 
 	public float getWidth() {

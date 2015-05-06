@@ -61,8 +61,6 @@ public class BrickScreen implements Screen {
 
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
 			enemy[i] = new Enemy(game, ladders, foreground, nerd);
-			enemy[i].reset(i);
-			Gdx.app.log("Screen", "Enemy(" + enemy[i].getX() + "," + enemy[i].getY() + ")");
 		}
 
 		camera = new OrthographicCamera();
@@ -70,12 +68,20 @@ public class BrickScreen implements Screen {
 
 		_setupCamera();
 
+		newScreen();
+
 	}
 
 	private void newScreen() {
-		
+		game.level++;
 		bomb.setBombs(game.level + 1);
-		
+		foreground.createField();
+		nerd.init();
+		for (int i = 0; i < Const.ENEMY_NUM; i++) {
+			enemy[i].reset(i);
+			Gdx.app.log("Screen", "Enemy(" + enemy[i].getX() + "," + enemy[i].getY() + ")");
+		}
+
 	}
 
 	@Override
@@ -125,8 +131,10 @@ public class BrickScreen implements Screen {
 
 		nerd.move(Gdx.graphics.getDeltaTime());
 
+		int enemiesLeft = 0;
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
 			if (enemy[i].isAlive()) {
+				enemiesLeft++;
 				enemy[i].move(Gdx.graphics.getDeltaTime());
 			}
 		}
@@ -156,6 +164,9 @@ public class BrickScreen implements Screen {
 		shapeRenderer.rect(nerd.getX(), nerd.getY(), nerd.getWidth(), nerd.getHeight());
 		shapeRenderer.end();
 
+		if (enemiesLeft == 0) {
+			newScreen();
+		}
 	}
 
 	@Override

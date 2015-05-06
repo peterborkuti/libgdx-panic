@@ -31,7 +31,6 @@ public class TiledForeGround {
 		ladder = _ladder;
 		this.ladders = ladders;
 
-		_createField();
 	}
 
 	public TiledMapRenderer getRenderer() {
@@ -77,7 +76,7 @@ public class TiledForeGround {
 		}
 	}
 
-	private void _createField() {
+	public void createField() {
 		TiledMapTileLayer layer =
 			new TiledMapTileLayer(
 				Const.WORLD_WIDTH, Const.WORLD_HEIGHT,
@@ -121,4 +120,5 @@ public class TiledForeGround {
 
 		return (new Tile(rec, type));
 	}
+
 }
