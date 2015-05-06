@@ -96,7 +96,10 @@ public class Bomb extends CanCollide {
 	@Override
 	public void die() {
 		active = false;
-		foreGround.setCellToEmpty(x, y - Const.TILE_SIZE);
+		int floor = BrickUtils.getFloorOfCoord(y);
+		if (floor > 0) {
+			foreGround.setCellToEmpty(x, y - Const.TILE_SIZE);
+		}
 	}
 
 	@Override
