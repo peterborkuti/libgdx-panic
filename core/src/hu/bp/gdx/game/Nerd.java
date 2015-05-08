@@ -48,6 +48,7 @@ public class Nerd extends CanCollide implements Movable {
 	private static final float RIGHT_WORLD_BOUNDARY =
 			Const.WORLD_WIDTH_UNIT - (Const.TILE_SIZE - RIGHT_MARGIN) * aspectRatio;
 
+	private static final float LEFT_WORLD_BOUNDARY = LEFT_MARGIN * aspectRatio;
 	/**
 	 * when shield is > 0, bob can not be killed
 	 * counts down when shield is active
@@ -184,8 +185,8 @@ public class Nerd extends CanCollide implements Movable {
 		if (state == STATE.LEFT) {
 			x -= delta;
 			y = BrickUtils.alignIfOnFloor(y, FLOOR_TOLERANCE);
-			if (x < - LEFT_MARGIN * aspectRatio) {
-				x = - LEFT_MARGIN * aspectRatio;
+			if (x < - LEFT_WORLD_BOUNDARY) {
+				x = - LEFT_WORLD_BOUNDARY;
 			}
 		}
 		else if (state == STATE.RIGHT) {
@@ -209,6 +210,11 @@ public class Nerd extends CanCollide implements Movable {
 	}
 
 	private boolean badMove(STATE oldState) {
+		if ((x < - LEFT_WORLD_BOUNDARY) ||
+			(x > RIGHT_WORLD_BOUNDARY)) {
+				return true;
+		}
+
 		Tile cell = null;
 
 		// left, down, falling
