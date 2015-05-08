@@ -255,11 +255,14 @@ public class Enemy extends CanCollide implements Movable {
 			return;
 		}
 
-		Tile tile = foreGround.getCell(x + LEFT_MARGIN, y - Const.TILE_SIZE);
+		float checkX = (state == STATE.LEFT) ? x + LEFT_MARGIN : x + Const.TILE_SIZE - RIGHT_MARGIN;
+
+		Tile tile = foreGround.getCell(checkX , y - Const.TILE_SIZE);
 
 		if (state != STATE.FALL && TiledForeGround.TYPE.none == tile.getType()) {
 			state = STATE.FALL;
 			goalY = BrickUtils.getYCoordOfFloor(BrickUtils.getFloorOfCoord(y) - 1);
+			x = tile.getRec().x;
 		}
 		else if ((state == STATE.LEFT) || (state == STATE.RIGHT)) {
 			decideClimb();
