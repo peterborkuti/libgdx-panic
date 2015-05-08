@@ -78,6 +78,7 @@ public class Enemy extends CanCollide implements Movable {
 
 		stateTime = 0;
 		active = true;
+		falledLevels = 0;
 
 		if (x < Const.WORLD_WIDTH_UNIT / 2) {
 			state = STATE.RIGHT;
