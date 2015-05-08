@@ -110,10 +110,10 @@ public class TiledForeGround {
 		int r = (int) Math.floor(y / Const.TILE_SIZE);
 		int c = (int) Math.floor(x / Const.TILE_SIZE);
 
-		TYPE type = TYPE.none;
+		TYPE type = TYPE.brick;
 
 		if (r < Const.WORLD_HEIGHT && r >= 0 && c < Const.WORLD_WIDTH && c >= 0) {
-			if (types[c][r] != null) type = types[c][r];
+			type = (types[c][r] != null) ? types[c][r] : TYPE.none;
 		}
 
 		Rectangle rec = new Rectangle(c * Const.TILE_SIZE, r * Const.TILE_SIZE, Const.TILE_SIZE, Const.TILE_SIZE);
