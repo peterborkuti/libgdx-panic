@@ -174,10 +174,10 @@ public class BrickScreen implements Screen {
 		shapeRenderer.end();
 
 		if (enemiesLeft == 0) {
-			newScreen(game.level++);
+			newScreen(game.level + 1);
 		}
 
-		if (bomb.getBombs() <= 0) {
+		if (bomb.getBombs() < 0) {
 			newScreen(game.level);
 		}
 	}
