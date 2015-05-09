@@ -217,8 +217,9 @@ public class Enemy extends CanCollide implements Movable {
 
 		if (state != STATE.FALL && TiledForeGround.TYPE.none == tile.getType()) {
 			state = STATE.FALL;
+			falledLevels = 0;
 			float goalY = BrickUtils
-					.getYCoordOfFloor(BrickUtils.getFloorOfCoord(y));
+					.getYCoordOfFloor(BrickUtils.getFloorOfCoord(y) - 1);
 
 			startAutoMove(tile.getRec().x, goalY);
 		} else if ((state == STATE.LEFT) || (state == STATE.RIGHT)) {
