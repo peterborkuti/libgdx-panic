@@ -134,43 +134,11 @@ public class Nerd extends CanCollide implements Movable {
 			(foreGround.getCell(x, y - Const.TILE_SIZE).getType() ==
 			TiledForeGround.TYPE.none);
 
-		return !onLadder && !onFloor || onHole;
+		return (!onLadder && !onFloor) || onHole;
 	}
 
 	@Override
 	public void setState(STATE _state) {
-		/*
-		HashSet<STATE> allowedStates = new HashSet<STATE>();
-
-		if (ladders.getLadderDown(this) != null) {
-			allowedStates.add(STATE.DOWN);
-		}
-
-		if (ladders.getLadderUp(this) != null) {
-			allowedStates.add(STATE.UP);
-		}
-
-		if (ladders.isOnLadder(this)) {
-			allowedStates.add(STATE.DOWN);
-			allowedStates.add(STATE.UP);
-			allowedStates.add(STATE.LEFT);
-			allowedStates.add(STATE.RIGHT);
-			allowedStates.add(STATE.STOP);
-		}
-
-		if (BrickUtils.isOnFloor(y, FLOOR_TOLERANCE)) {
-			allowedStates.add(STATE.LEFT);
-			allowedStates.add(STATE.RIGHT);
-			allowedStates.add(STATE.STOP);
-		}
-		else {
-			allowedStates.add(STATE.FALL);
-		}
-
-		if (allowedStates.contains(_state)) {
-			state = _state;;
-		}
-		*/
 		if (_state != STATE.FALL) {
 			state = _state;
 		}
@@ -204,8 +172,12 @@ public class Nerd extends CanCollide implements Movable {
 		}
 
 		if (state == STATE.FALL && BrickUtils.isOnFloor(y, FLOOR_TOLERANCE)) {
-			y = BrickUtils.alignIfOnFloor(y, FLOOR_TOLERANCE);
-			state = STATE.STOP;
+			Tile cell = foreGround.getCell(x, y + 1);
+
+			if (TiledForeGround.TYPE.none != cell.getType()) {
+				y = BrickUtils.alignIfOnFloor(y, FLOOR_TOLERANCE);
+				state = STATE.STOP;
+			}
 		}
 	}
 
