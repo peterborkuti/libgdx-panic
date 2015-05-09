@@ -126,7 +126,28 @@ public class Enemy extends CanCollide implements Movable {
 		return active;
 	}
 
-	private void setRandomHorizontalAutoMove() {
+	private void setHorizontalMove() {
+		int nerdFloor = BrickUtils.getFloorOfCoord(nerd.y);
+		int floor = BrickUtils.getFloorOfCoord(y);
+
+		if (nerdFloor == floor) {
+			state = (nerd.x < x) ? STATE.LEFT : STATE.RIGHT;
+		}
+		else {
+			state = getRandomHorizontalState();
+		}
+
+		if (state == STATE.RIGHT) {
+			startAutoMove(RIGHT_WORLD_BOUNDARY, y);
+		}
+		else {
+			startAutoMove(LEFT_WORLD_BOUNDARY, y);
+		}
+	}
+
+	private STATE getRandomHorizontalState() {
+		STATE state;
+
 		if ((RIGHT_WORLD_BOUNDARY - x) < Const.TILE_SIZE) {
 			state = STATE.LEFT;
 		}
@@ -137,12 +158,7 @@ public class Enemy extends CanCollide implements Movable {
 			state = (Math.random() < 0.5) ? STATE.RIGHT : STATE.LEFT;
 		}
 
-		if (state == STATE.RIGHT) {
-			startAutoMove(RIGHT_WORLD_BOUNDARY, y);
-		}
-		else {
-			startAutoMove(LEFT_WORLD_BOUNDARY, y);
-		}
+		return state;
 	}
 
 	private void doIfGoalReached() {
@@ -163,11 +179,11 @@ public class Enemy extends CanCollide implements Movable {
 					falledLevels = 0;
 				}
 
-				setRandomHorizontalAutoMove();
+				setHorizontalMove();
 			}
 		}
 		else if (state == STATE.UP || state == STATE.DOWN) {
-			setRandomHorizontalAutoMove();
+			setHorizontalMove();
 		}
 		else if (state == STATE.RIGHT) {
 			state = STATE.LEFT;
