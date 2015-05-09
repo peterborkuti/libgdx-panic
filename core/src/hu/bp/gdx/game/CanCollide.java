@@ -1,5 +1,6 @@
 package hu.bp.gdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
 public abstract class CanCollide {
@@ -17,6 +18,8 @@ public abstract class CanCollide {
 	protected float aspectRatio = 1f;
 	protected int width = 0;
 	protected int height = 0;
+	private float goalX = 0;
+	private float goalY = 0;
 
 	public abstract void die();
 	public abstract boolean isAlive();
@@ -37,6 +40,47 @@ public abstract class CanCollide {
 		y = _y;
 		countBoundary();
 	}
+
+	public void autoMove(float delta) {
+		boolean movedToX = false;
+
+		if (!goalXReached()) {
+			float sgn = Math.signum(goalX - x);
+			x += (Math.abs(goalX - x) <= delta) ? sgn : delta * sgn;
+			movedToX = true;
+		}
+		else {
+			x = goalX;
+		}
+
+		if (!movedToX && !goalYReached()) {
+			float sgn = Math.signum(goalY - y);
+			y += (Math.abs(goalY - y) <= delta) ? sgn : delta * sgn;
+		}
+		else if (!movedToX) {
+			//goalYReached
+			y = goalY;
+		}
+	}
+
+	private boolean goalXReached() {
+		return Math.abs(goalX - x) <= 1;
+	}
+
+	private boolean goalYReached() {
+		return Math.abs(goalY - y) <= 1;
+	}
+
+	public boolean goalReached() {
+		return (goalXReached() && goalYReached());
+	}
+
+	public void startAutoMove(float goalX, float goalY) {
+		Gdx.app.log("CanCollide","startAutoMove:" + goalX + "," + goalY);
+		this.goalX = goalX;
+		this.goalY = goalY;
+	}
+
 	public CanCollide(int _leftMargin, int _rightMargin, float _aspectRatio, int _width, int _height) {
 		leftMargin = _leftMargin;
 		rightMargin = _rightMargin;

@@ -15,6 +15,7 @@ public class BrickUtils {
 	 * @return the floor number where the Y coordinate is
 	 */
 	public static int getFloorOfCoord(float y) {
+		y = Math.round(y / Const.TILE_SIZE) * Const.TILE_SIZE;
 		y -= Const.TILE_SIZE;
 		return (int) Math.floor(y / Const.TILE_SIZE / Const.FLOOR_HEIGHT);
 	}

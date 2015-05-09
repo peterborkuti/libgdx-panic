@@ -11,6 +11,37 @@ public class LadderManager {
 	private Ladder[][] ladders =
 		new Ladder[Const.NUM_OF_FLOORS][NUM_OF_LADDERS];
 
+	private Ladder getNearestLadder(float x, int floor) {
+		Ladder l = null;
+
+		float x0 = ladders[floor][0].x;
+		float x1 = ladders[floor][1].x;
+
+		if (Math.abs(x - x0) < Math.abs(x - x1)) {
+			l = ladders[floor][0];
+		}
+		else {
+			l = ladders[floor][1];
+		}
+
+		return l;
+	}
+
+	public Ladder getNearestUpLadder(CanCollide object) {
+		int floor = BrickUtils.getFloorOfCoord(object.y);
+
+		return getNearestLadder(object.x, floor);
+	}
+
+	public Ladder getNearestDownLadder(CanCollide object) {
+		int floor = BrickUtils.getFloorOfCoord(object.y);
+		if (floor > 0) {
+			return getNearestLadder(object.x, floor - 1);
+		}
+		Gdx.app.log("LadderManager", "no down ladder");
+		return null;
+	}
+
 	/**
 	 * @param object
 	 * @return with a ladder which can be reached upwards or null
