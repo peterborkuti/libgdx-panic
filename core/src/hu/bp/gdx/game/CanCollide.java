@@ -20,6 +20,7 @@ public abstract class CanCollide {
 	protected int height = 0;
 	private float goalX = 0;
 	private float goalY = 0;
+	private boolean autoMove = false;
 
 	public abstract void die();
 	public abstract boolean isAlive();
@@ -42,6 +43,10 @@ public abstract class CanCollide {
 	}
 
 	public void autoMove(float delta) {
+		if (!autoMove) {
+			return;
+		}
+
 		boolean movedToX = false;
 
 		if (!goalXReached()) {
@@ -60,6 +65,7 @@ public abstract class CanCollide {
 		else if (!movedToX) {
 			//goalYReached
 			y = goalY;
+			autoMove = false;
 		}
 	}
 
@@ -72,15 +78,19 @@ public abstract class CanCollide {
 	}
 
 	public boolean goalReached() {
-		return (goalXReached() && goalYReached());
+		return !autoMove;
 	}
 
 	public void startAutoMove(float goalX, float goalY) {
 		Gdx.app.log("CanCollide","startAutoMove:" + goalX + "," + goalY);
 		this.goalX = goalX;
 		this.goalY = goalY;
+		autoMove = true;
 	}
 
+	public void stopAutoMove() {
+		autoMove = false;
+	}
 	public CanCollide(int _leftMargin, int _rightMargin, float _aspectRatio, int _width, int _height) {
 		leftMargin = _leftMargin;
 		rightMargin = _rightMargin;

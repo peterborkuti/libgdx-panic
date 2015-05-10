@@ -139,6 +139,22 @@ public class Nerd extends CanCollide implements Movable {
 
 	@Override
 	public void setState(STATE _state) {
+		if (_state == STATE.STOP) {
+			double goalX = x / Const.TILE_SIZE;
+
+			goalX =
+				(state == STATE.LEFT) ?
+					Math.floor(goalX) : Math.ceil(goalX);
+
+			goalX *= Const.TILE_SIZE;
+
+			startAutoMove((float)goalX, y);
+		}
+
+		if (_state != STATE.FALL && _state != STATE.STOP) {
+			stopAutoMove();
+		}
+
 		if (_state != STATE.FALL) {
 			state = _state;
 		}
@@ -220,6 +236,7 @@ public class Nerd extends CanCollide implements Movable {
 		float oldY = y;
 		STATE oldState = state;
 
+		autoMove(delta);
 		doMove(delta);
 
 		if (badMove(oldState)) {
