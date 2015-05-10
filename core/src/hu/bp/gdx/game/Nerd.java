@@ -237,7 +237,10 @@ public class Nerd extends CanCollide implements Movable {
 		STATE oldState = state;
 
 		autoMove(delta);
-		doMove(delta);
+
+		if (goalReached()) {
+			doMove(delta);
+		}
 
 		if (badMove(oldState)) {
 			x = oldX;
