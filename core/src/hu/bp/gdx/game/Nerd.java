@@ -55,6 +55,10 @@ public class Nerd extends CanCollide implements Movable {
 	 */
 	private float shield = MAX_SHIELD;
 
+	public boolean isShieldActive() {
+		return shield > 0;
+	}
+
 	public Nerd(BrickGame game, LadderManager ladders, TiledForeGround foreGround) {
 		super(4, 4, aspectRatio, 24, 32);
 		TextureRegion[][] tmp = TextureRegion.split(game.nerdSheet,
@@ -131,7 +135,7 @@ public class Nerd extends CanCollide implements Movable {
 		boolean onLadder = ladders.isOnLadder(this);
 		boolean onFloor = BrickUtils.isOnFloor(y, FLOOR_TOLERANCE);
 		boolean onHole =
-			(foreGround.getCell(x, y - Const.TILE_SIZE).getType() ==
+			(foreGround.getCell(x + width / 2, y - Const.TILE_SIZE).getType() ==
 			TiledForeGround.TYPE.none);
 
 		return (!onLadder && !onFloor) || onHole;
@@ -206,7 +210,7 @@ public class Nerd extends CanCollide implements Movable {
 		Tile cell = null;
 
 		// left, down, falling
-		cell = foreGround.getCell(x, y);
+		cell = foreGround.getCell(x + width / 2, y);
 
 		if (oldState == STATE.RIGHT) {
 			cell = foreGround.getCell(x + width - LEFT_MARGIN, y);
