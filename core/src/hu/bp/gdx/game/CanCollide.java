@@ -82,7 +82,7 @@ public abstract class CanCollide {
 	}
 
 	public void startAutoMove(float goalX, float goalY) {
-		Gdx.app.log("CanCollide","startAutoMove:" + goalX + "," + goalY);
+		//Gdx.app.log("CanCollide","startAutoMove:" + goalX + "," + goalY);
 		this.goalX = goalX;
 		this.goalY = goalY;
 		autoMove = true;
