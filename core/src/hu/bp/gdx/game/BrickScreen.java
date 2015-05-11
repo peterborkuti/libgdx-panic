@@ -104,6 +104,7 @@ public class BrickScreen implements Screen {
 			camera.zoom -= 0.02;
 		}
 		if (BrickInput.space && !bomb.isAlive()) {
+			BrickInput.space = false;
 			bomb.reset(nerd.getX(), nerd.getY());
 		}
 	}
