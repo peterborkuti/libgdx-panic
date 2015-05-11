@@ -2,15 +2,14 @@ package hu.bp.gdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 
 public class BrickScreen implements Screen {
 	final BrickGame game;
@@ -44,6 +43,8 @@ public class BrickScreen implements Screen {
 	}
 
 	public BrickScreen(final BrickGame bGame) {
+		Gdx.gl.glClearColor(100f / 255f, 100f / 255f, 250f / 255f, 1f);
+
 		game = bGame;
 
 		font = new BitmapFont();
@@ -64,7 +65,8 @@ public class BrickScreen implements Screen {
 		}
 
 		camera = new OrthographicCamera();
-		center = new CameraPosition(camera, nerd, Const.TILE_SIZE * Const.SCREEN_SIZE);
+		center = new CameraPosition(camera, nerd, Const.TILE_SIZE
+				* Const.SCREEN_SIZE);
 
 		_setupCamera();
 
@@ -79,7 +81,8 @@ public class BrickScreen implements Screen {
 		nerd.init();
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
 			enemy[i].reset(i);
-			Gdx.app.log("Screen", "Enemy(" + enemy[i].getX() + "," + enemy[i].getY() + ")");
+			Gdx.app.log("Screen",
+					"Enemy(" + enemy[i].getX() + "," + enemy[i].getY() + ")");
 		}
 		_setupCamera();
 
@@ -111,25 +114,21 @@ public class BrickScreen implements Screen {
 
 	private void scoreBoard(int enemies) {
 		Vector3 stickyText = camera.unproject(new Vector3(10, 20, 0));
-		font.draw(
-			batch,
-			"FPS:  " + Gdx.graphics.getFramesPerSecond() + ", " +
-			"Lives:" + nerd.getLives() + ", " +
-			"Bombs:" + bomb.getBombs() + ", " +
-			"Level:" + game.level + ", " +
-			"Enemies:" + enemies,
-			stickyText.x, stickyText.y);
+		font.draw(batch,
+				"FPS:  " + Gdx.graphics.getFramesPerSecond() + ", " + "Lives:"
+						+ nerd.getLives() + ", " + "Bombs:" + bomb.getBombs()
+						+ ", " + "Level:" + game.level + ", " + "Enemies:"
+						+ enemies, stickyText.x, stickyText.y);
 	}
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(100f / 255f, 100f / 255f, 250f / 255f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		_handleInput();
 
 		center.update();
-		//camera.update();
+		// camera.update();
 		foreground.getRenderer().setView(camera);
 		foreground.getRenderer().render();
 
@@ -145,6 +144,10 @@ public class BrickScreen implements Screen {
 			if (enemy[i].isAlive()) {
 				enemiesLeft++;
 				enemy[i].move(Gdx.graphics.getDeltaTime());
+				if (enemy[i].getBoundary().overlaps(nerd.getBoundary())) {
+					nerd.die();
+					Gdx.app.log("BrickScreen", "DIE");
+				}
 			}
 		}
 
@@ -152,34 +155,45 @@ public class BrickScreen implements Screen {
 
 		if (bomb.isAlive()) {
 			bomb.move(Gdx.graphics.getDeltaTime());
-			batch.draw(
-				bomb.getFrame(), bomb.getX(), bomb.getY(), bomb.getWidth(),
-				bomb.getHeight());
+			batch.draw(bomb.getFrame(), bomb.getX(), bomb.getY(),
+					bomb.getWidth(), bomb.getHeight());
 		}
-
-		batch.draw(
-			nerd.getFrame(), nerd.getX(), nerd.getY(), nerd.getWidth(),
-			nerd.getHeight());
 
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
 			if (enemy[i].isAlive()) {
-				batch.draw(
-					enemy[i].getFrame(), enemy[i].getX(), enemy[i].getY(), enemy[i].getWidth(),
-					enemy[i].getHeight());
+				batch.draw(enemy[i].getFrame(), enemy[i].getX(),
+						enemy[i].getY(), enemy[i].getWidth(),
+						enemy[i].getHeight());
 			}
 		}
 
+		if (nerd.isShieldActive()) {
+			batch.setColor(
+				new Color(
+					(float) Math.random(),
+					(float) Math.random(),
+					(float) Math.random(),
+					1f));
+		} else {
+			batch.setColor(Color.WHITE);
+		}
+
+		batch.draw(nerd.getFrame(), nerd.getX(), nerd.getY(), nerd.getWidth(),
+				nerd.getHeight());
+		batch.setColor(Color.WHITE);
+
 		batch.end();
 
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.rect(nerd.getX(), nerd.getY(), nerd.getWidth(), nerd.getHeight());
-		shapeRenderer.end();
+		/**
+		 * shapeRenderer.begin(ShapeType.Line); shapeRenderer.rect(nerd.getX(),
+		 * nerd.getY(), nerd.getWidth(), nerd.getHeight()); shapeRenderer.end();
+		 */
 
 		if (enemiesLeft == 0) {
 			newScreen(game.level + 1);
 		}
 
-		if (bomb.getBombs() < 0) {
+		if (bomb.getBombs() < 0 || nerd.getLives() <= 0) {
 			newScreen(game.level);
 		}
 	}
