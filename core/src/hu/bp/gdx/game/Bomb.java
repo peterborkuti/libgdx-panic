@@ -23,7 +23,7 @@ public class Bomb extends CanCollide {
 	private TextureRegion currentFrame;
 
 	private TiledForeGround foreGround;
-	public static final float aspectRatio = 1.5f; //sprite was too small
+	public static final float aspectRatio = 1f; //sprite was too small
 
 	public static final float animSpeed = 0.4f; // second / frame
 	public static final float animVelocity = 2.0f * aspectRatio; // pixel moving / frame
