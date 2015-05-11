@@ -262,8 +262,6 @@ public class Nerd extends CanCollide implements Movable {
 		if (shield <= 0) {
 		 lives--;
 		}
-		y = BrickUtils.getYCoordOfFloor(0);
-		x = 50;
 		shield = MAX_SHIELD;
 	}
 

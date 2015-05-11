@@ -81,6 +81,7 @@ public class BrickScreen implements Screen {
 			enemy[i].reset(i);
 			Gdx.app.log("Screen", "Enemy(" + enemy[i].getX() + "," + enemy[i].getY() + ")");
 		}
+		_setupCamera();
 
 	}
 
