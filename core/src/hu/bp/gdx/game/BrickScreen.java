@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 
 public class BrickScreen implements Screen {
@@ -80,7 +79,7 @@ public class BrickScreen implements Screen {
 		foreground.createField();
 		nerd.init();
 		for (int i = 0; i < Const.ENEMY_NUM; i++) {
-			enemy[i].reset(i);
+			enemy[i].reset(i + 5);
 			Gdx.app.log("Screen",
 					"Enemy(" + enemy[i].getX() + "," + enemy[i].getY() + ")");
 		}
@@ -115,10 +114,11 @@ public class BrickScreen implements Screen {
 	private void scoreBoard(int enemies) {
 		Vector3 stickyText = camera.unproject(new Vector3(10, 20, 0));
 		font.draw(batch,
-				"FPS:  " + Gdx.graphics.getFramesPerSecond() + ", " + "Lives:"
-						+ nerd.getLives() + ", " + "Bombs:" + bomb.getBombs()
-						+ ", " + "Level:" + game.level + ", " + "Enemies:"
-						+ enemies, stickyText.x, stickyText.y);
+			"FPS:  " + Gdx.graphics.getFramesPerSecond() + ", " +
+			"Lives:" + nerd.getLives() + ", " +
+			"Bombs:" + bomb.getBombs() + ", " +
+			"Level:" + game.level + ", " +
+			"Enemies:" + enemies, stickyText.x, stickyText.y);
 	}
 
 	@Override
@@ -146,7 +146,6 @@ public class BrickScreen implements Screen {
 				enemy[i].move(Gdx.graphics.getDeltaTime());
 				if (enemy[i].getBoundary().overlaps(nerd.getBoundary())) {
 					nerd.die();
-					Gdx.app.log("BrickScreen", "DIE");
 				}
 			}
 		}
