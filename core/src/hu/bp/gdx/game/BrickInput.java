@@ -10,6 +10,7 @@ public class BrickInput extends InputAdapter {
 	public static boolean plus = false;
 	public static boolean minus = false;
 	public static boolean space = false;
+	public static boolean escape = false;
 
 	private Movable movable; 
 
@@ -40,6 +41,9 @@ public class BrickInput extends InputAdapter {
 			break;
 		case Keys.SPACE:
 			space = true;
+			break;
+		case Keys.ESCAPE:
+			escape = true;
 			break;
 
 		}

@@ -192,7 +192,8 @@ public class BrickScreen implements Screen {
 			newScreen(game.level + 1);
 		}
 
-		if (bomb.getBombs() < 0 || nerd.getLives() <= 0) {
+		if (BrickInput.escape || nerd.getLives() <= 0) {
+			BrickInput.escape = false;
 			newScreen(game.level);
 		}
 	}
