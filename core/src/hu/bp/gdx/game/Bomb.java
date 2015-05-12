@@ -66,9 +66,6 @@ public class Bomb extends CanCollide {
 			active = true;
 			countBoundary();
 		}
-		else {// BrickScreen checks -1 and exits
-			bombs--;
-		}
 	}
 
 	public float getWidth() {
