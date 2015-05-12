@@ -143,6 +143,10 @@ public class Nerd extends CanCollide implements Movable {
 
 	@Override
 	public void setState(STATE _state) {
+		if (state == STATE.FALL) {
+			return;
+		}
+
 		if (_state == STATE.STOP) {
 			double goalX = x / Const.TILE_SIZE;
 
@@ -154,14 +158,11 @@ public class Nerd extends CanCollide implements Movable {
 
 			startAutoMove((float)goalX, y);
 		}
-
-		if (_state != STATE.FALL && _state != STATE.STOP) {
+		else {
 			stopAutoMove();
 		}
 
-		if (_state != STATE.FALL) {
-			state = _state;
-		}
+		state = _state;
 	}
 
 	@Override
@@ -192,10 +193,11 @@ public class Nerd extends CanCollide implements Movable {
 		}
 
 		if (state == STATE.FALL && BrickUtils.isOnFloor(y, FLOOR_TOLERANCE)) {
-			Tile cell = foreGround.getCell(x, y + 1);
+			Tile cell = foreGround.getCell(x + width / 2, y + 1);
 
 			if (TiledForeGround.TYPE.none != cell.getType()) {
 				y = BrickUtils.alignIfOnFloor(y, FLOOR_TOLERANCE);
+
 				state = STATE.STOP;
 			}
 		}
