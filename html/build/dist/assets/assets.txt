@@ -1,0 +1,16 @@
+d:assets:0:application/unknown
+i:nerd_sprite_12x8tiles_24x32pixels.png:15935:image/png
+i:ladder.png:420:image/png
+i:ladder.gif:1030:image/gif
+i:brick_wall_single_perfect.png:261:image/png
+i:cyborgpig_1x5_32x32.png:1238:image/png
+i:bomb_1x9_32x32.png:2684:image/png
+t:credits.txt:117:text/plain
+t:com/badlogic/gdx/graphics/g3d/particles/particles.fragment.glsl:770:application/unknown
+t:com/badlogic/gdx/graphics/g3d/particles/particles.vertex.glsl:2886:application/unknown
+t:com/badlogic/gdx/graphics/g3d/shaders/default.fragment.glsl:5163:application/unknown
+t:com/badlogic/gdx/graphics/g3d/shaders/default.vertex.glsl:8948:application/unknown
+t:com/badlogic/gdx/graphics/g3d/shaders/depth.fragment.glsl:870:application/unknown
+t:com/badlogic/gdx/graphics/g3d/shaders/depth.vertex.glsl:2923:application/unknown
+t:com/badlogic/gdx/utils/arial-15.fnt:21743:application/unknown
+i:com/badlogic/gdx/utils/arial-15.png:21814:image/png
